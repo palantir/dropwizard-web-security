@@ -22,7 +22,7 @@ Usage
 
 Configuration
 -------------
-Add configuration for SinglePageAppBundle to your application's Dropwizard configuration file. A minimal example looks
+Add configuration for the bundle to your application's Dropwizard configuration file. A minimal example looks
 like the following:
 
 ```yaml

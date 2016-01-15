@@ -24,12 +24,10 @@ import javax.ws.rs.core.Response;
 @SuppressWarnings("checkstyle:designforextension")
 public abstract class BaseCorsIntegrationTests {
 
+    public static final String CORS_DEFAULT_ALLOW_CREDS = "true";
+    public static final String EXAMPLE_RESPONSE = "hello world";
     public static final String GOOD_ORIGIN = "http://good.origin";
     public static final String VALID_PATH = "/example/hello";
-
-    public static final String CORS_DEFAULT_ALLOW_CREDS = "true";
-
-    public static final String EXAMPLE_RESPONSE = "hello world";
 
     @Path("example")
     public static final class ExampleResource {

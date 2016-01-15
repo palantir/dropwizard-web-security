@@ -80,7 +80,8 @@ public final class OverrideCorsIntegrationTests extends BaseCorsIntegrationTests
 
     private static final String ALLOWED_METHODS = "GET,PUT,POST,OPTIONS";
     private static final HttpMethod ALLOWED_METHOD = HttpMethod.GET;
-    public static final Long MAX_AGE = 999L;
+
+    private static final Long MAX_AGE = 999L;
 
     @Test
     public void testPreflightWorksFromYamlAndApplicationDefaults() {

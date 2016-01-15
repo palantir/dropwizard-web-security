@@ -4,7 +4,6 @@
 
 package com.palantir.dropwizard.websecurity;
 
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;

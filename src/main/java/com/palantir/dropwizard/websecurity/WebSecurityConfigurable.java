@@ -4,7 +4,6 @@
 
 package com.palantir.dropwizard.websecurity;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**

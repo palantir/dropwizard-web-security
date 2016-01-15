@@ -48,6 +48,9 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
 
     @Override
     public void run(WebSecurityConfigurable configuration, Environment environment) throws Exception {
+        checkNotNull(configuration);
+        checkNotNull(environment);
+
         applyCors(configuration, environment);
     }
 
