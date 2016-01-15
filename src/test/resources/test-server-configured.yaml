@@ -1,0 +1,18 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 0
+  adminConnectors:
+    - type: http
+      port: 0
+  requestLog:
+    appenders: []
+
+
+webSecurity:
+  cors:
+    allowedHeaders: "Origin,Content-Type,Accept"
+    allowedMethods: "GET,PUT,POST,OPTIONS"
+    allowedOrigins: "http://good.origin"
+    preflightMaxAge: 123
+    allowCredentials: false
