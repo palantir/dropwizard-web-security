@@ -6,6 +6,7 @@ package com.palantir.dropwizard.websecurity;
 
 import static org.junit.Assert.assertEquals;
 
+import com.palantir.dropwizard.websecurity.cors.CorsConfiguration;
 import org.junit.Test;
 
 /**
