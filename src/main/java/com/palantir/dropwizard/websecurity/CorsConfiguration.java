@@ -139,8 +139,12 @@ public abstract class CorsConfiguration {
     }
 
     /**
-     * Validates the origin, by the following rules: <ul> <li>If the origin contains a {@code *}, then it must be a
-     * valid regular expression.</li> <li>It must be a valid URL, without a path component</li> </ul>
+     * Validates the origin, by the following rules:
+     * <ul>
+     * <li>Origins that are just {@code "*"} are not passed through</li>
+     * <li>If it contains a {@code *}, then it must be a valid regular expression.</li>
+     * <li>It must be a valid URL, without a path component</li>
+     * </ul>
      */
     private static boolean validateOrigin(String origin) {
         try {
