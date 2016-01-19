@@ -1,10 +1,12 @@
 dropwizard-web-security
 =======================
+[![Circle CI](https://circleci.com/gh/palantir/dropwizard-web-security.svg?style=svg&circle-token=52b148126fda6cfba213cb832ff733d04d0d7277)](https://circleci.com/gh/palantir/dropwizard-web-security)
+
 A bundle for applying default web security functionality to a dropwizard application. It covers the following areas:
 
-- CORS
+- [CORS](https://www.owasp.org/index.php/CORS_OriginHeaderScrutiny)
 - Web Application Security Headers (Content Security Policy, etc.)
-- HTTP STS
+- [HTTP STS](https://www.owasp.org/index.php/HTTP_Strict_Transport_Security)
 
 Usage
 -----
@@ -67,22 +69,22 @@ If a value is not configured, it will not be passed along to the `CrossOriginFil
 ### App Security Configuration
 You can configure the App Security section by using the following YAML values:
 
-Field | Default
------ | -------
-`enabled` | `true`
-contentSecurityPolicy | `"default-src 'self'"`
-contentTypeOptions | `"nosniff"`
-frameOptions | `"sameorigin"`
-xssProtection | `"1; mode=block"`
+Field | Header | Default
+----- | ------ | -------
+`enabled` | | `true`
+`contentSecurityPolicy` | `Content-Security-Policy` | `"default-src 'self'"`
+`contentTypeOptions` | `X-Content-Type-Options` | `"nosniff"`
+`frameOptions` | `X-Frame-Options` | `"sameorigin"`
+`xssProtection` | `X-XSS-Protection` | `"1; mode=block"`
 
 
 ### HSTS Configuration
 You can configure the HSTS section by using the following YAML values:
 
-Field | Default
------ | -------
-`enabled` | `false`
-`headerValue` | `""`
+Field | Header | Default
+----- | ------ | -------
+`enabled` | | `false`
+`headerValue` | `Strict-Transport-Security` | `""`
 
 
 Advanced Usage
@@ -105,7 +107,7 @@ public class AdvancedApplication extends Application<AdvancedConfiguration> {
                         .preflightMaxAge(60 * 10)
                         .build())
 
-                .appSecurity(new AppSecurityConfiguration.DISABLED)
+                .appSecurity(AppSecurityConfiguration.DISABLED)
 
                 .hsts(new HstsConfiguration.Builder()
                         .enabled(true)
