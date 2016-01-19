@@ -7,13 +7,16 @@ package com.palantir.dropwizard.websecurity.hsts;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
+/**
+ * Configuration class used to set the properties for an {@link HstsFilter}.
+ */
 @Value.Immutable
 @Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
 @JsonDeserialize(as = ImmutableHstsConfiguration.class)
 @SuppressWarnings("checkstyle:designforextension")
 public class HstsConfiguration {
 
-    public static final boolean DEFAULT_ENABLED = true;
+    public static final boolean DEFAULT_ENABLED = false;
     public static final String DEFAULT_HEADER_VALUE = "";
 
     @Value.Default

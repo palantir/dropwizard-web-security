@@ -17,6 +17,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * A filter that adds the {@code Strict-Transport-Security} header if the {@link HttpServletRequest#isSecure()} is true.
+ */
 public final class HstsFilter implements Filter {
 
     private final String headerValue;

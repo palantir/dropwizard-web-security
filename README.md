@@ -1,5 +1,10 @@
 dropwizard-web-security
 =======================
+A bundle for applying default web security functionality to a dropwizard application. It covers the following areas:
+
+- CORS
+- Web Application Security Headers (Content Security Policy, etc.)
+- HTTP STS
 
 Usage
 -----
@@ -31,10 +36,15 @@ webSecurity:
         allowedOrigins: "http://localhost"
 ```
 
+The above minimal configuration will yield the following behaviors:
+
+- CORS enabled, allowing the `http://localhost` origin
+- The default App Security headers will be injected
+- HSTS is turned OFF by default
+
 
 ### CORS Configuration
-
-You can configure the CORS section by using the following YAML values.
+You can configure the CORS section by using the following YAML values:
 
 Field | Default
 ----- | -------
@@ -46,7 +56,7 @@ Field | Default
 `exposedHeaders` | `""`
 `preflightMaxAge` | `1800`
 
-The values shown are from [`CrossOriginFilter`][1], except the following:
+**NOTE:** The values shown are from [`CrossOriginFilter`][1], except the following:
 
 - `enabled` - CORS is on by default
 - `allowedOrigins` - Set to blank instead of `"*"` to require the user to enter the allowed origins.
@@ -54,12 +64,33 @@ The values shown are from [`CrossOriginFilter`][1], except the following:
 If a value is not configured, it will not be passed along to the `CrossOriginFilter`.
 
 
+### App Security Configuration
+You can configure the App Security section by using the following YAML values:
+
+Field | Default
+----- | -------
+`enabled` | `true`
+contentSecurityPolicy | `"default-src 'self'"`
+contentTypeOptions | `"nosniff"`
+frameOptions | `"sameorigin"`
+xssProtection | `"1; mode=block"`
+
+
+### HSTS Configuration
+You can configure the HSTS section by using the following YAML values:
+
+Field | Default
+----- | -------
+`enabled` | `false`
+`headerValue` | `""`
+
+
 Advanced Usage
 --------------
-You can customize your application's defaults by defining it inside of your `initialize` method. In the following
-example, the application defines values for `allowedHeaders` and `preflightMaxAge`.
+You can customize your application's defaults by defining it inside of your `initialize` method. Any value not set will
+be set to the default values.
 
-Please note, the application default values will be **over-riden by the YAML defined values**.
+**Note:** the application default values will be **over-riden by the YAML defined values**.
 
 ```java
 public class AdvancedApplication extends Application<AdvancedConfiguration> {
@@ -69,14 +100,17 @@ public class AdvancedApplication extends Application<AdvancedConfiguration> {
         // define the application defaults
         WebSecurityConfiguration applicationDefaults = new WebSecurityConfiguration.Builder()
 
-                // this could be used to turn off CORS by default
-                // .cors(CorsConfiguration.DISABLED)
-
-                // configure custom defaults for this application
                 .cors(new CorsConfiguration.Builder()
                         .allowedHeaders("Origin,Content-Type,Accept")
                         .preflightMaxAge(60 * 10)
                         .build())
+
+                .appSecurity(new AppSecurityConfiguration.DISABLED)
+
+                .hsts(new HstsConfiguration.Builder()
+                        .enabled(true)
+                        .headerValue("max-age=31536000; includeSubDomains")
+                        .build()
 
                 .build();
 

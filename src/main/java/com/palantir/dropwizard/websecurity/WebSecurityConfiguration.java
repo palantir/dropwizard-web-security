@@ -20,9 +20,6 @@ import org.immutables.value.Value;
 @SuppressWarnings("checkstyle:designforextension")
 public abstract class WebSecurityConfiguration {
 
-    /**
-     * The {@link CorsConfiguration}, which is set to {@link CorsConfiguration#DEFAULT} if not set.
-     */
     @JsonProperty("cors")
     @Value.Default
     public CorsConfiguration cors() {

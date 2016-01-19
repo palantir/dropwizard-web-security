@@ -10,6 +10,15 @@ import com.google.common.net.HttpHeaders;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Injects different security headers based on a {@link AppSecurityConfiguration}. These headers include:
+ * <ul>
+ * <li>Content Security Policy (including support for IE 10 + 11)</li>
+ * <li>Content Type Options</li>
+ * <li>Frame Options</li>
+ * <li>XSS Protection</li>
+ * </ul>
+ */
 public final class AppSecurityHeaderInjector {
 
     public static final String HEADER_IE_X_CONTENT_SECURITY_POLICY = "X-Content-Security-Policy";

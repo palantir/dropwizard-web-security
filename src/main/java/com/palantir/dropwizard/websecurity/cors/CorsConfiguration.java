@@ -34,9 +34,6 @@ public abstract class CorsConfiguration {
      */
     public static final String DEFAULT_ALLOWED_ORIGINS = "";
 
-    /**
-     * The default value for {@link #enabled()}.
-     */
     public static final boolean DEFAULT_ENABLED = true;
 
     /**

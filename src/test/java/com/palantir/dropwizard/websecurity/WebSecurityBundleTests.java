@@ -21,6 +21,9 @@ import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.junit.Test;
 
+/**
+ * Tests for {@link WebSecurityBundle}.
+ */
 public final class WebSecurityBundleTests {
 
     private final Environment environment = mock(Environment.class, RETURNS_DEEP_STUBS);
@@ -30,7 +33,7 @@ public final class WebSecurityBundleTests {
     public void testFiltersAppliedWhenEnabled() throws Exception {
         WebSecurityBundle bundle = new WebSecurityBundle();
 
-        ImmutableWebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
+        WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
                 .cors(new CorsConfiguration.Builder().enabled(true).build())
                 .appSecurity(new AppSecurityConfiguration.Builder().enabled(true).build())
                 .hsts(new HstsConfiguration.Builder().enabled(true).build())

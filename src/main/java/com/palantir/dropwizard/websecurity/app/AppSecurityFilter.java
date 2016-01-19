@@ -16,6 +16,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * A filter that injects the App Security headers using a {@link AppSecurityHeaderInjector}.
+ */
 public final class AppSecurityFilter implements Filter {
 
     private final AppSecurityHeaderInjector injector;

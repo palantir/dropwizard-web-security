@@ -7,6 +7,9 @@ package com.palantir.dropwizard.websecurity.app;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
+/**
+ * Configuration class used to set the properties for a {@link AppSecurityFilter}.
+ */
 @Value.Immutable
 @Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
 @JsonDeserialize(as = ImmutableAppSecurityConfiguration.class)
@@ -20,30 +23,45 @@ public class AppSecurityConfiguration {
     public static final String DEFAULT_XSS_PROTECTION = "1; mode=block";
 
     /**
-     * Sentinal value used to turn off a given security header.
+     * Sentinel value used to turn off a given security header.
      */
     public static final String TURN_OFF = "";
 
+    /**
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#CONTENT_SECURITY_POLICY}.
+     */
     @Value.Default
     public String contentSecurityPolicy() {
         return DEFAULT_CONTENT_SECURITY_POLICY;
     }
 
+    /**
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#X_CONTENT_TYPE_OPTIONS}.
+     */
     @Value.Default
     public String contentTypeOptions() {
         return DEFAULT_CONTENT_TYPE_OPTIONS;
     }
 
+    /**
+     * Determines if {@link AppSecurityFilter} is applied. The default value is {@value #DEFAULT_ENABLED}.
+     */
     @Value.Default
     public boolean enabled() {
         return DEFAULT_ENABLED;
     }
 
+    /**
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#X_FRAME_OPTIONS}.
+     */
     @Value.Default
     public String frameOptions() {
         return DEFAULT_FRAME_OPTIONS;
     }
 
+    /**
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#X_XSS_PROTECTION}.
+     */
     @Value.Default
     public String xssProtection() {
         return DEFAULT_XSS_PROTECTION;
