@@ -5,6 +5,7 @@
 package com.palantir.dropwizard.websecurity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Optional;
 
 /**
  * Used by the application's {@link io.dropwizard.Configuration} to provide a {@link WebSecurityConfiguration}.
@@ -15,5 +16,5 @@ public interface WebSecurityConfigurable {
      * The {@link WebSecurityConfiguration}. It should be represented in the YAML file as {@code webSecurity}.
      */
     @JsonProperty("webSecurity")
-    WebSecurityConfiguration getWebSecurityConfiguration();
+    Optional<WebSecurityConfiguration> getWebSecurityConfiguration();
 }

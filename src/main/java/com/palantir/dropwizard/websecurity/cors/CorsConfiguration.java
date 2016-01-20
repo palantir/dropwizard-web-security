@@ -28,13 +28,18 @@ import org.immutables.value.Value;
 @SuppressWarnings("checkstyle:designforextension")
 public abstract class CorsConfiguration {
 
-    /**
-     * The default value of {@link #allowedOrigins()}. It's set to {@code ""}, blocking all origins to provide a secure
-     * out-of-the-box experience.
-     */
-    public static final String DEFAULT_ALLOWED_ORIGINS = "";
+    private static final String DISABLED_ORIGINS = "";
 
-    public static final boolean DEFAULT_ENABLED = true;
+    /**
+     * The default value of {@link #allowedOrigins()}. It's set to {@value #DISABLED_ORIGINS}, blocking all origins to
+     * provide a secure out-of-the-box experience.
+     */
+    public static final String DEFAULT_ALLOWED_ORIGINS = DISABLED_ORIGINS;
+
+    /**
+     * The default value of {@link #allowedMethods()}. It includes commonly used methods.
+     */
+    public static final String DEFAULT_ALLOWED_METHODS = "DELETE,GET,HEAD,POST,PUT";
 
     /**
      * If set, will be used to set the initial property {@code allowCredentials}.
@@ -47,9 +52,12 @@ public abstract class CorsConfiguration {
     public abstract Optional<String> allowedHeaders();
 
     /**
-     * If set, will be used to set the initial property {@code allowedMethods}.
+     * Used to set the initial property {@code allowedMethods}. The default value is {@value #DEFAULT_ALLOWED_METHODS}.
      */
-    public abstract Optional<String> allowedMethods();
+    @Value.Default
+    public String allowedMethods() {
+        return DEFAULT_ALLOWED_METHODS;
+    }
 
     /**
      * Used to set the initial property {@code allowedOrigins}. The default value is {@value #DEFAULT_ALLOWED_ORIGINS}.
@@ -60,11 +68,12 @@ public abstract class CorsConfiguration {
     }
 
     /**
-     * Determines if {@link CrossOriginFilter} is applied. The default value is {@value #DEFAULT_ENABLED}.
+     * Determines if {@link CrossOriginFilter} is applied. Returns true if there is an {@link #allowedOrigins()} value
+     * set to a non-empty string, false otherwise.
      */
-    @Value.Default
+    @Value.Derived
     public boolean enabled() {
-        return DEFAULT_ENABLED;
+        return !DISABLED_ORIGINS.equals(allowedOrigins());
     }
 
     /**
@@ -84,10 +93,7 @@ public abstract class CorsConfiguration {
         ImmutableMap.Builder<String, String> propertiesBuilder = ImmutableMap.builder();
 
         propertiesBuilder.put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, allowedOrigins());
-
-        if (allowedMethods().isPresent()) {
-            propertiesBuilder.put(CrossOriginFilter.ALLOWED_METHODS_PARAM, allowedMethods().get());
-        }
+        propertiesBuilder.put(CrossOriginFilter.ALLOWED_METHODS_PARAM, allowedMethods());
 
         if (allowedHeaders().isPresent()) {
             propertiesBuilder.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM, allowedHeaders().get());
@@ -174,7 +180,9 @@ public abstract class CorsConfiguration {
     /**
      * Provides a configuration that is disabled.
      */
-    public static final CorsConfiguration DISABLED = new CorsConfiguration.Builder().enabled(false).build();
+    public static final CorsConfiguration DISABLED = new CorsConfiguration.Builder()
+            .allowedOrigins(DISABLED_ORIGINS)
+            .build();
 
     public static class Builder extends ImmutableCorsConfiguration.Builder {}
 }

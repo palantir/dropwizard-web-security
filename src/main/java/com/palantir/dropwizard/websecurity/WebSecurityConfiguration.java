@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.palantir.dropwizard.websecurity.app.AppSecurityConfiguration;
 import com.palantir.dropwizard.websecurity.cors.CorsConfiguration;
-import com.palantir.dropwizard.websecurity.hsts.HstsConfiguration;
 import org.immutables.value.Value;
 
 /**
@@ -30,12 +29,6 @@ public abstract class WebSecurityConfiguration {
     @Value.Default
     public AppSecurityConfiguration appSecurity() {
         return AppSecurityConfiguration.DEFAULT;
-    }
-
-    @JsonProperty("hsts")
-    @Value.Default
-    public HstsConfiguration hsts() {
-        return HstsConfiguration.DEFAULT;
     }
 
     /**

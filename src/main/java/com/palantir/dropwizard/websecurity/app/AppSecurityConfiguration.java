@@ -16,16 +16,17 @@ import org.immutables.value.Value;
 @SuppressWarnings("checkstyle:designforextension")
 public class AppSecurityConfiguration {
 
-    public static final String DEFAULT_CONTENT_SECURITY_POLICY = "default-src 'self'";
-    public static final String DEFAULT_CONTENT_TYPE_OPTIONS = "nosniff";
-    public static final boolean DEFAULT_ENABLED = true;
-    public static final String DEFAULT_FRAME_OPTIONS = "sameorigin";
-    public static final String DEFAULT_XSS_PROTECTION = "1; mode=block";
-
     /**
      * Sentinel value used to turn off a given security header.
      */
     public static final String TURN_OFF = "";
+
+    public static final String DEFAULT_CONTENT_SECURITY_POLICY = "default-src 'self'";
+    public static final String DEFAULT_CONTENT_TYPE_OPTIONS = "nosniff";
+    public static final boolean DEFAULT_ENABLED = true;
+    public static final String DEFAULT_FRAME_OPTIONS = "sameorigin";
+    public static final String DEFAULT_HSTS = TURN_OFF;
+    public static final String DEFAULT_XSS_PROTECTION = "1; mode=block";
 
     /**
      * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#CONTENT_SECURITY_POLICY}.
@@ -57,6 +58,14 @@ public class AppSecurityConfiguration {
     @Value.Default
     public String frameOptions() {
         return DEFAULT_FRAME_OPTIONS;
+    }
+
+    /**
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#STRICT_TRANSPORT_SECURITY}.
+     */
+    @Value.Default
+    public String hsts() {
+        return DEFAULT_HSTS;
     }
 
     /**

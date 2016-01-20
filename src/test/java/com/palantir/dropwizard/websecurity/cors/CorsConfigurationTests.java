@@ -6,14 +6,17 @@ package com.palantir.dropwizard.websecurity.cors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Iterables;
 import io.dropwizard.validation.BaseValidator;
 import io.dropwizard.validation.ValidationMethod;
+import java.util.Map;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.junit.Test;
 
 /**
@@ -26,12 +29,45 @@ public final class CorsConfigurationTests {
     @Test
     public void testDefaultValues() {
         assertEquals(CorsConfiguration.DEFAULT_ALLOWED_ORIGINS, CorsConfiguration.DEFAULT.allowedOrigins());
-        assertEquals(CorsConfiguration.DEFAULT_ENABLED, CorsConfiguration.DEFAULT.enabled());
+        assertFalse(CorsConfiguration.DEFAULT.enabled());
         assertFalse(CorsConfiguration.DEFAULT.allowCredentials().isPresent());
         assertFalse(CorsConfiguration.DEFAULT.allowedHeaders().isPresent());
-        assertFalse(CorsConfiguration.DEFAULT.allowedMethods().isPresent());
+        assertEquals(CorsConfiguration.DEFAULT_ALLOWED_METHODS, CorsConfiguration.DEFAULT.allowedMethods());
         assertFalse(CorsConfiguration.DEFAULT.exposedHeaders().isPresent());
         assertFalse(CorsConfiguration.DEFAULT.preflightMaxAge().isPresent());
+    }
+
+    @Test
+    public void testDefaultPropertyMap() {
+        Map<String, String> props = CorsConfiguration.DEFAULT.getPropertyMap();
+
+        assertEquals(CorsConfiguration.DEFAULT_ALLOWED_ORIGINS, props.get(CrossOriginFilter.ALLOWED_ORIGINS_PARAM));
+        assertEquals(CorsConfiguration.DEFAULT_ALLOWED_METHODS, props.get(CrossOriginFilter.ALLOWED_METHODS_PARAM));
+        assertNull(props.get(CrossOriginFilter.ALLOWED_HEADERS_PARAM));
+        assertNull(props.get(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM));
+        assertNull(props.get(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM));
+        assertNull(props.get(CrossOriginFilter.EXPOSED_HEADERS_PARAM));
+    }
+
+    @Test
+    public void testPropertyMapAddsAll() {
+        CorsConfiguration config = new CorsConfiguration.Builder()
+                .allowedOrigins("origins")
+                .allowedMethods("methods")
+                .allowedHeaders("headers")
+                .preflightMaxAge(123)
+                .allowCredentials(true)
+                .exposedHeaders("exposed")
+                .build();
+
+        Map<String, String> props = config.getPropertyMap();
+
+        assertEquals(config.allowedOrigins(), props.get(CrossOriginFilter.ALLOWED_ORIGINS_PARAM));
+        assertEquals(config.allowedMethods(), props.get(CrossOriginFilter.ALLOWED_METHODS_PARAM));
+        assertEquals(config.allowedHeaders().get(), props.get(CrossOriginFilter.ALLOWED_HEADERS_PARAM));
+        assertEquals(config.preflightMaxAge().get().toString(), props.get(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM));
+        assertEquals(config.allowCredentials().get().toString(), props.get(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM));
+        assertEquals(config.exposedHeaders().get(), props.get(CrossOriginFilter.EXPOSED_HEADERS_PARAM));
     }
 
     @Test
