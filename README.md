@@ -4,9 +4,10 @@ dropwizard-web-security
 
 A bundle for applying default web security functionality to a dropwizard application. It covers the following areas:
 
-- [Cross-Origin Resource Sharing (CORS)](https://www.owasp.org/index.php/CORS_OriginHeaderScrutiny)
-- [HTTP Strict Transport Security (HSTS)](https://www.owasp.org/index.php/HTTP_Strict_Transport_Security)
-- Web Application Security Headers (Content Security Policy, etc.)
+- [Cross-Origin Resource Sharing (CORS)][cors1] [\[2\]][cors2] [\[3\]][cors3]
+- [HTTP Strict Transport Security (HSTS)][hsts1] [\[2\]][hsts2] [\[3\]][hsts3]
+- Web Application Security Headers ([Content Security Policy][csp], etc.)
+
 
 Usage
 -----
@@ -25,8 +26,7 @@ Usage
 	}
 	```
 
-Just applying the bundle will add web app security headers to your application by default. **CORS and HSTS are turned
-OFF by default.**
+Just applying the bundle will add web app security headers to your application by default. **CORS and HSTS are DISABLED by default.**
 
 
 CORS Configuration
@@ -46,7 +46,7 @@ webSecurity:
     preflightMaxAge: 1800
 ```
 
-**NOTE:** The values shown are from [`CrossOriginFilter`][1], except the following:
+**NOTE:** The values shown are from [`CrossOriginFilter`][corsfilter], except the following:
 
 - `allowedOrigins` - set to blank instead of `"*"` to require the user to enter the allowed origins
 - `allowedMethods` - set to include a default set of commonly used methods
@@ -106,6 +106,17 @@ public class AdvancedApplication extends Application<AdvancedConfiguration> {
 
 License
 -------
-This project is made available under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
+This project is made available under the [Apache 2.0 License][license].
 
-[1]: http://download.eclipse.org/jetty/9.2.13.v20150730/apidocs/org/eclipse/jetty/servlets/CrossOriginFilter.html
+
+[cors1]: https://www.w3.org/TR/cors/
+[cors2]: https://www.owasp.org/index.php/CORS_OriginHeaderScrutiny
+[cors3]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
+[hsts1]: https://tools.ietf.org/id/draft-ietf-websec-strict-transport-sec-14.txt
+[hsts2]: https://www.owasp.org/index.php/HTTP_Strict_Transport_Security
+[hsts3]: https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security
+[csp]: https://developer.mozilla.org/en-US/docs/Web/Security/CSP
+
+[corsfilter]: http://download.eclipse.org/jetty/9.2.13.v20150730/apidocs/org/eclipse/jetty/servlets/CrossOriginFilter.html
+
+[license]: http://www.apache.org/licenses/LICENSE-2.0
