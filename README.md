@@ -12,26 +12,59 @@ A bundle for applying default web security functionality to a dropwizard applica
 Usage
 -----
 1. Ensure your configuration implements `WebSecurityConfigurable`.
-2. Add the bundle to your application.
+2. Add the bundle to your application:
 
 	```java
 	public class ExampleApplication extends Application<ExampleConfiguration> {
-	
+
+	    private final WebSecurityBundle webSecurityBundle = new WebSecurityBundle();
+
 	    @Override
 	    public void initialize(Bootstrap<ExampleConfiguration> bootstrap) {
-	        bootstrap.addBundle(new WebSecurityBundle());
+	        bootstrap.addBundle(webSecurityBundle);
 	    }
-	    
-	    // ...
-	}
-	```
+    }
 
-Just applying the bundle will add web app security headers to your application by default. **CORS and HSTS are DISABLED by default.**
+    ```
+
+3. Add the `AppSecurityFilter` filter to your environment:
+
+    ```java
+    @Override
+    public void run(ExampleConfiguration configuration, Environment environment) throws Exception {
+        // will build a filter from the derived configuration
+        AppSecurityFilter filter = new AppSecurityFilter(this.webSecurityBundle.getDerivedConfiguration());
+
+        // add the filter to your environment
+        environment.servlets()
+                .addFilter("AppSecurityFilter", filter)
+                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+    }
+    ```
+
+
+Configuration
+-------------
+App Security headers are **not added by default**. You will need to add the `AppSecurityFilter` to your environment
+manually. See the example code for specifics.
+
+The following are the default values, only specify values if they differ from the default values shown below.
+
+```yaml
+webSecurity:
+  contentSecurityPolicy: "default-src 'self'"     # Content-Security-Policy and X-Content-Security-Policy
+  contentTypeOptions: "nosniff"                   # X-Content-Type-Options
+  frameOptions: "sameorigin"                      # X-Frame-Options
+  hsts: ""                                        # Strict-Transport-Security
+  xssProtection: "1; mode=block"                  # X-XSS-Protection
+```
+
+**NOTE:** To disable a specific header, set the value to `""`.
 
 
 CORS Configuration
 ------------------
-CORS is **disabled by default**. To turn on CORS, set the `allowedOrigins` method to a non-empty string.
+CORS is **disabled by default**. To enable CORS, set the `allowedOrigins` method to a non-empty string.
 
 The following are the default values, only specify values if they differ from the default values shown below.
 
@@ -52,53 +85,35 @@ webSecurity:
 - `allowedMethods` - set to include a default set of commonly used methods
 
 
-App Security Configuration
---------------------------
-App Security is **enabled by default**. It adds common security headers to your responses.
-
-The following are the default values, only specify values if they differ from the default values shown below.
-
-```yaml
-webSecurity:
-  appSecurity:
-    enabled: true
-    contentSecurityPolicy: "default-src 'self'"     # Content-Security-Policy and X-Content-Security-Policy
-    contentTypeOptions: "nosniff"                   # X-Content-Type-Options
-    frameOptions: "sameorigin"                      # X-Frame-Options
-    hsts: ""                                        # Strict-Transport-Security
-    xssProtection: "1; mode=block"                  # X-XSS-Protection
-```
-
-**NOTE:** To disable a specific header, set the value to `""`.
-
-
 Advanced Usage
 --------------
-You can customize your application's defaults by defining it inside of your `initialize` method. Any value not set will
-be set to the default values.
+You can customize your application's defaults by defining it inside of your Dropwizard application. Any value not set
+will be set to the default values.
 
-**Note:** the application default values will be **over-riden by the YAML defined values**.
+**Note:** the application default values will be **overridden by the YAML defined values**.
 
 ```java
-public class AdvancedApplication extends Application<AdvancedConfiguration> {
+public static final class ExampleApplication extends Application<ExampleConfiguration> {
+
+    private final WebSecurityConfiguration webSecurityDefaults = new WebSecurityConfiguration.Builder()
+
+            // set app defaults for different header values
+            .contentSecurityPolicy(CSP_FROM_APP)
+            .contentTypeOptions(CTO_FROM_APP)
+
+            // CORS is still DISABLED, since the allowedOrigins is not set, but the default value will be
+            // respected if it's ever turned on
+            .cors(new CorsConfiguration.Builder()
+                    .preflightMaxAge(60 * 10)
+                    .build())
+
+            .build();
+
+    private final WebSecurityBundle webSecurityBundle = new WebSecurityBundle(webSecurityDefaults);
+
     @Override
-    public void initialize(Bootstrap<AdvancedConfiguration> bootstrap) {
-
-        // define the application defaults
-        WebSecurityConfiguration applicationDefaults = new WebSecurityConfiguration.Builder()
-
-                .cors(new CorsConfiguration.Builder()
-                        .allowedOrigins("http://good.origin")
-                        .allowedHeaders("Origin,Content-Type,Accept")
-                        .preflightMaxAge(60 * 10)
-                        .build())
-
-                .appSecurity(AppSecurityConfiguration.DISABLED)
-
-                .build();
-
-        // apply the bundle with the application defaults
-        bootstrap.addBundle(new WebSecurityBundle(applicationDefaults));
+    public void initialize(Bootstrap<ExampleConfiguration> bootstrap) {
+        bootstrap.addBundle(webSecurityBundle);
     }
 }
 ```

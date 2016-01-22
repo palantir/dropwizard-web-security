@@ -4,10 +4,8 @@
 
 package com.palantir.dropwizard.websecurity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.palantir.dropwizard.websecurity.app.AppSecurityConfiguration;
-import com.palantir.dropwizard.websecurity.cors.CorsConfiguration;
+import com.google.common.base.Optional;
 import org.immutables.value.Value;
 
 /**
@@ -16,25 +14,39 @@ import org.immutables.value.Value;
 @Value.Immutable
 @Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
 @JsonDeserialize(as = ImmutableWebSecurityConfiguration.class)
-@SuppressWarnings("checkstyle:designforextension")
 public abstract class WebSecurityConfiguration {
 
-    @JsonProperty("cors")
-    @Value.Default
-    public CorsConfiguration cors() {
-        return CorsConfiguration.DEFAULT;
-    }
-
-    @JsonProperty("appSecurity")
-    @Value.Default
-    public AppSecurityConfiguration appSecurity() {
-        return AppSecurityConfiguration.DEFAULT;
-    }
+    public static final String TURN_OFF = "";
 
     /**
-     * Provides a configuration with default values.
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#CONTENT_SECURITY_POLICY}.
      */
-    public static final WebSecurityConfiguration DEFAULT = new WebSecurityConfiguration.Builder().build();
+    public abstract Optional<String> contentSecurityPolicy();
+
+    /**
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#X_CONTENT_TYPE_OPTIONS}.
+     */
+    public abstract Optional<String> contentTypeOptions();
+
+    /**
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#X_FRAME_OPTIONS}.
+     */
+    public abstract Optional<String> frameOptions();
+
+    /**
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#STRICT_TRANSPORT_SECURITY}.
+     */
+    public abstract Optional<String> hsts();
+
+    /**
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#X_XSS_PROTECTION}.
+     */
+    public abstract Optional<String> xssProtection();
+
+    /**
+     * Configuration for CORS functionality.
+     */
+    public abstract Optional<CorsConfiguration> cors();
 
     public static class Builder extends ImmutableWebSecurityConfiguration.Builder {}
 }

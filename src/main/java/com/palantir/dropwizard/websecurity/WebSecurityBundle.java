@@ -5,19 +5,15 @@
 package com.palantir.dropwizard.websecurity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
-import com.palantir.dropwizard.websecurity.app.AppSecurityConfiguration;
-import com.palantir.dropwizard.websecurity.app.AppSecurityFilter;
-import com.palantir.dropwizard.websecurity.app.AppSecurityHeaderInjector;
-import com.palantir.dropwizard.websecurity.app.HstsFilter;
-import com.palantir.dropwizard.websecurity.cors.CorsConfiguration;
-import io.dropwizard.Configuration;
+import com.google.common.collect.ImmutableMap;
+import com.palantir.dropwizard.websecurity.filters.HstsFilter;
 import io.dropwizard.ConfiguredBundle;
-import io.dropwizard.server.AbstractServerFactory;
-import io.dropwizard.server.ServerFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.EnumSet;
+import java.util.Map;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -27,13 +23,21 @@ import org.eclipse.jetty.servlets.CrossOriginFilter;
  */
 public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConfigurable> {
 
+    /**
+     * The default value of CORS Allowed Methods. It includes commonly used methods.
+     */
+    public static final String DEFAULT_ALLOWED_METHODS = "DELETE,GET,HEAD,POST,PUT";
+
+    private static final String ROOT_PATH = "/*";
+
     private final WebSecurityConfiguration applicationDefaults;
+    private WebSecurityConfiguration derivedConfiguration = null;
 
     /**
-     * Constructs a bundle with the {@link WebSecurityConfiguration#DEFAULT} as the application defaults.
+     * Constructs a bundle with the out of the box defaults.
      */
     public WebSecurityBundle() {
-        this(WebSecurityConfiguration.DEFAULT);
+        this(new WebSecurityConfiguration.Builder().build());
     }
 
     /**
@@ -54,74 +58,72 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         checkNotNull(configuration);
         checkNotNull(environment);
 
-        WebSecurityConfiguration webSecurityConfig = WebSecurityConfiguration.DEFAULT;
+        WebSecurityConfiguration.Builder builder = new WebSecurityConfiguration.Builder();
+        builder.from(applicationDefaults);
+
         if (configuration.getWebSecurityConfiguration().isPresent()) {
-            webSecurityConfig = configuration.getWebSecurityConfiguration().get();
+            builder.from(configuration.getWebSecurityConfiguration().get());
         }
 
-        String rootPath = getRootPath(configuration);
+        this.derivedConfiguration = builder.build();
 
-        applyCors(webSecurityConfig, environment, rootPath);
-        applyAppSecurity(webSecurityConfig, environment, rootPath);
+        applyCors(derivedConfiguration, environment);
+        applyHsts(derivedConfiguration, environment);
     }
 
-    private void applyCors(WebSecurityConfiguration configuration, Environment environment, String rootPath) {
-        CorsConfiguration corsConfiguration = configuration.cors();
+    /**
+     * Returns the derived configuration. Must be called after {@link #run(WebSecurityConfigurable, Environment)}.
+     */
+    public WebSecurityConfiguration getDerivedConfiguration() {
+        checkState(this.derivedConfiguration != null);
+        return derivedConfiguration;
+    }
 
-        if (!corsConfiguration.enabled()) {
+    private static void applyCors(WebSecurityConfiguration derivedConfig, Environment environment) {
+        if (!derivedConfig.cors().isPresent() || !derivedConfig.cors().get().enabled()) {
             return;
         }
 
         CrossOriginFilter crossOriginFilter = new CrossOriginFilter();
+
         FilterRegistration.Dynamic dynamic = environment.servlets().addFilter("CrossOriginFilter", crossOriginFilter);
-
-        dynamic.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, rootPath);
-
-        CorsConfiguration derivedConfiguration = new CorsConfiguration.Builder()
-                .from(this.applicationDefaults.cors())
-                .from(corsConfiguration)
-                .build();
-
-        dynamic.setInitParameters(derivedConfiguration.getPropertyMap());
+        dynamic.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, ROOT_PATH);
+        dynamic.setInitParameters(buildCorsPropertyMap(derivedConfig.cors().get()));
     }
 
-    private void applyAppSecurity(WebSecurityConfiguration configuration, Environment environment, String rootPath) {
-        AppSecurityConfiguration appSecurityConfiguration = configuration.appSecurity();
+    private static Map<String, String> buildCorsPropertyMap(CorsConfiguration cors) {
+        ImmutableMap.Builder<String, String> propertyBuilder = ImmutableMap.builder();
 
-        if (!appSecurityConfiguration.enabled()) {
-            return;
+        propertyBuilder.put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, cors.allowedOrigins().get());
+        propertyBuilder.put(CrossOriginFilter.ALLOWED_METHODS_PARAM, cors.allowedMethods().or(DEFAULT_ALLOWED_METHODS));
+
+        if (cors.allowedHeaders().isPresent()) {
+            propertyBuilder.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM, cors.allowedHeaders().get());
         }
 
-        AppSecurityConfiguration derivedConfiguration = new AppSecurityConfiguration.Builder()
-                .from(this.applicationDefaults.appSecurity())
-                .from(appSecurityConfiguration)
-                .build();
+        if (cors.preflightMaxAge().isPresent()) {
+            propertyBuilder.put(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM, Long.toString(cors.preflightMaxAge().get()));
+        }
 
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(derivedConfiguration);
-        AppSecurityFilter appSecurityFilter = new AppSecurityFilter(injector);
+        if (cors.allowCredentials().isPresent()) {
+            propertyBuilder.put(
+                    CrossOriginFilter.ALLOW_CREDENTIALS_PARAM,
+                    Boolean.toString(cors.allowCredentials().get()));
+        }
 
-        environment.servlets()
-                .addFilter("AppSecurityFitler", appSecurityFilter)
-                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, rootPath);
+        if (cors.exposedHeaders().isPresent()) {
+            propertyBuilder.put(CrossOriginFilter.EXPOSED_HEADERS_PARAM, cors.exposedHeaders().get());
+        }
 
-        if (!AppSecurityConfiguration.TURN_OFF.equals(appSecurityConfiguration.hsts())) {
+        return propertyBuilder.build();
+    }
+
+    private static void applyHsts(WebSecurityConfiguration derivedConfig, Environment environment) {
+        String hsts = derivedConfig.hsts().or("");
+        if (!hsts.isEmpty()) {
             environment.servlets()
-                    .addFilter("HstsFilter", new HstsFilter(derivedConfiguration.hsts()))
-                    .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, rootPath);
+                    .addFilter("HstsFilter", new HstsFilter(hsts))
+                    .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, ROOT_PATH);
         }
-    }
-
-    private static String getRootPath(WebSecurityConfigurable configuration) {
-        String rootPath = "/*";
-
-        if (configuration instanceof Configuration) {
-            ServerFactory serverFactory = ((Configuration) configuration).getServerFactory();
-            if (serverFactory instanceof AbstractServerFactory) {
-                rootPath = ((AbstractServerFactory) serverFactory).getJerseyRootPath();
-                rootPath += "*";
-            }
-        }
-
-        return rootPath;
     }
 }

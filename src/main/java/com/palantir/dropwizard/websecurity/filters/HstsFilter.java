@@ -2,7 +2,7 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity.app;
+package com.palantir.dropwizard.websecurity.filters;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -42,6 +42,10 @@ public final class HstsFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+
+        checkNotNull(request);
+        checkNotNull(response);
+        checkNotNull(chain);
 
         if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
