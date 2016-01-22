@@ -12,11 +12,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.common.base.Optional;
 import com.palantir.dropwizard.websecurity.app.AppSecurityConfiguration;
 import com.palantir.dropwizard.websecurity.app.AppSecurityFilter;
+import com.palantir.dropwizard.websecurity.app.HstsFilter;
 import com.palantir.dropwizard.websecurity.cors.CorsConfiguration;
-import com.palantir.dropwizard.websecurity.hsts.HstsConfiguration;
-import com.palantir.dropwizard.websecurity.hsts.HstsFilter;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.junit.Test;
@@ -34,12 +34,14 @@ public final class WebSecurityBundleTests {
         WebSecurityBundle bundle = new WebSecurityBundle();
 
         WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
-                .cors(new CorsConfiguration.Builder().enabled(true).build())
-                .appSecurity(new AppSecurityConfiguration.Builder().enabled(true).build())
-                .hsts(new HstsConfiguration.Builder().enabled(true).build())
+                .cors(new CorsConfiguration.Builder().allowedOrigins("http://origin").build())
+                .appSecurity(new AppSecurityConfiguration.Builder()
+                        .enabled(true)
+                        .hsts("on")
+                        .build())
                 .build();
 
-        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(webSecurityConfig);
+        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(webSecurityConfig));
 
         bundle.run(this.appConfig, this.environment);
 
@@ -55,10 +57,9 @@ public final class WebSecurityBundleTests {
         WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
                 .cors(CorsConfiguration.DISABLED)
                 .appSecurity(AppSecurityConfiguration.DISABLED)
-                .hsts(HstsConfiguration.DISABLED)
                 .build();
 
-        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(webSecurityConfig);
+        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(webSecurityConfig));
 
         bundle.run(this.appConfig, this.environment);
 
@@ -70,19 +71,17 @@ public final class WebSecurityBundleTests {
     @Test
     public void testYamlOverridesAppDefaults() throws Exception {
         WebSecurityConfiguration appDefaultConfig = new WebSecurityConfiguration.Builder()
-                .cors(new CorsConfiguration.Builder().enabled(true).build())
+                .cors(new CorsConfiguration.Builder().allowedOrigins("http://origin").build())
                 .appSecurity(new AppSecurityConfiguration.Builder().enabled(true).build())
-                .hsts(new HstsConfiguration.Builder().enabled(true).build())
                 .build();
         WebSecurityBundle bundle = new WebSecurityBundle(appDefaultConfig);
 
         WebSecurityConfiguration yamlConfig = new WebSecurityConfiguration.Builder()
                 .cors(CorsConfiguration.DISABLED)
                 .appSecurity(AppSecurityConfiguration.DISABLED)
-                .hsts(HstsConfiguration.DISABLED)
                 .build();
 
-        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(yamlConfig);
+        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(yamlConfig));
 
         bundle.run(this.appConfig, this.environment);
 

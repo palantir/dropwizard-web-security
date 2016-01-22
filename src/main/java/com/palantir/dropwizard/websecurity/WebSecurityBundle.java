@@ -9,9 +9,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.palantir.dropwizard.websecurity.app.AppSecurityConfiguration;
 import com.palantir.dropwizard.websecurity.app.AppSecurityFilter;
 import com.palantir.dropwizard.websecurity.app.AppSecurityHeaderInjector;
+import com.palantir.dropwizard.websecurity.app.HstsFilter;
 import com.palantir.dropwizard.websecurity.cors.CorsConfiguration;
-import com.palantir.dropwizard.websecurity.hsts.HstsConfiguration;
-import com.palantir.dropwizard.websecurity.hsts.HstsFilter;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.server.AbstractServerFactory;
@@ -55,13 +54,19 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         checkNotNull(configuration);
         checkNotNull(environment);
 
-        applyCors(configuration, environment);
-        applyAppSecurity(configuration, environment);
-        applyHstsFilter(configuration, environment);
+        WebSecurityConfiguration webSecurityConfig = WebSecurityConfiguration.DEFAULT;
+        if (configuration.getWebSecurityConfiguration().isPresent()) {
+            webSecurityConfig = configuration.getWebSecurityConfiguration().get();
+        }
+
+        String rootPath = getRootPath(configuration);
+
+        applyCors(webSecurityConfig, environment, rootPath);
+        applyAppSecurity(webSecurityConfig, environment, rootPath);
     }
 
-    private void applyCors(WebSecurityConfigurable configuration, Environment environment) {
-        CorsConfiguration corsConfiguration = configuration.getWebSecurityConfiguration().cors();
+    private void applyCors(WebSecurityConfiguration configuration, Environment environment, String rootPath) {
+        CorsConfiguration corsConfiguration = configuration.cors();
 
         if (!corsConfiguration.enabled()) {
             return;
@@ -70,7 +75,7 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         CrossOriginFilter crossOriginFilter = new CrossOriginFilter();
         FilterRegistration.Dynamic dynamic = environment.servlets().addFilter("CrossOriginFilter", crossOriginFilter);
 
-        dynamic.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, getRootPath(configuration));
+        dynamic.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, rootPath);
 
         CorsConfiguration derivedConfiguration = new CorsConfiguration.Builder()
                 .from(this.applicationDefaults.cors())
@@ -80,8 +85,8 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         dynamic.setInitParameters(derivedConfiguration.getPropertyMap());
     }
 
-    private void applyAppSecurity(WebSecurityConfigurable configuration, Environment environment) {
-        AppSecurityConfiguration appSecurityConfiguration = configuration.getWebSecurityConfiguration().appSecurity();
+    private void applyAppSecurity(WebSecurityConfiguration configuration, Environment environment, String rootPath) {
+        AppSecurityConfiguration appSecurityConfiguration = configuration.appSecurity();
 
         if (!appSecurityConfiguration.enabled()) {
             return;
@@ -97,28 +102,14 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
 
         environment.servlets()
                 .addFilter("AppSecurityFitler", appSecurityFilter)
-                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, getRootPath(configuration));
-    }
+                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, rootPath);
 
-    private void applyHstsFilter(WebSecurityConfigurable configuration, Environment environment) {
-        HstsConfiguration hstsConfiguration = configuration.getWebSecurityConfiguration().hsts();
-
-        if (!hstsConfiguration.enabled()) {
-            return;
+        if (!AppSecurityConfiguration.TURN_OFF.equals(appSecurityConfiguration.hsts())) {
+            environment.servlets()
+                    .addFilter("HstsFilter", new HstsFilter(derivedConfiguration.hsts()))
+                    .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, rootPath);
         }
-
-        HstsConfiguration derivedConfiguration = new HstsConfiguration.Builder()
-                .from(this.applicationDefaults.hsts())
-                .from(hstsConfiguration)
-                .build();
-
-        HstsFilter hstsFilter = new HstsFilter(derivedConfiguration.headerValue());
-
-        environment.servlets()
-                .addFilter("HstsFilter", hstsFilter)
-                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, getRootPath(configuration));
     }
-
 
     private static String getRootPath(WebSecurityConfigurable configuration) {
         String rootPath = "/*";
