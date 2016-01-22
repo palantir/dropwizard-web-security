@@ -77,7 +77,7 @@ Advanced Usage
 You can customize your application's defaults by defining it inside of your `initialize` method. Any value not set will
 be set to the default values.
 
-**Note:** the application default values will be **over-riden by the YAML defined values**.
+**Note:** the application default values will be **overridden by the YAML defined values**.
 
 ```java
 public class AdvancedApplication extends Application<AdvancedConfiguration> {
