@@ -2,10 +2,11 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity.app;
+package com.palantir.dropwizard.websecurity.filters;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.palantir.dropwizard.websecurity.WebSecurityConfiguration;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -23,9 +24,9 @@ public final class AppSecurityFilter implements Filter {
 
     private final AppSecurityHeaderInjector injector;
 
-    public AppSecurityFilter(AppSecurityHeaderInjector injector) {
-        checkNotNull(injector);
-        this.injector = injector;
+    public AppSecurityFilter(WebSecurityConfiguration config) {
+        checkNotNull(config);
+        this.injector = new AppSecurityHeaderInjector(config);
     }
 
     @Override
@@ -41,6 +42,10 @@ public final class AppSecurityFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+
+        checkNotNull(request);
+        checkNotNull(response);
+        checkNotNull(chain);
 
         if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
             this.injector.injectHeaders((HttpServletRequest) request, (HttpServletResponse) response);

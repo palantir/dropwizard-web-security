@@ -2,12 +2,13 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity.app;
+package com.palantir.dropwizard.websecurity.filters;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import com.google.common.net.HttpHeaders;
+import com.palantir.dropwizard.websecurity.WebSecurityConfiguration;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -28,11 +29,12 @@ public final class AppSecurityFilterTests {
 
     @Test
     public void testInjectInHttpServletRequests() throws IOException, ServletException {
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(AppSecurityConfiguration.DEFAULT);
-        AppSecurityFilter filter = new AppSecurityFilter(injector);
+        WebSecurityConfiguration config = new WebSecurityConfiguration.Builder().build();
+        AppSecurityFilter filter = new AppSecurityFilter(config);
 
         filter.doFilter(request, response, chain);
 
-        assertEquals(AppSecurityConfiguration.DEFAULT_FRAME_OPTIONS, response.getHeader(HttpHeaders.X_FRAME_OPTIONS));
+        // only testing 1 header, since the AppSecurityHeaderInjector is tested separately
+        assertEquals(AppSecurityHeaderInjector.DEFAULT_FRAME_OPTIONS, response.getHeader(HttpHeaders.X_FRAME_OPTIONS));
     }
 }

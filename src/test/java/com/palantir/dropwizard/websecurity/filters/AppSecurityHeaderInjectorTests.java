@@ -2,12 +2,13 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity.app;
+package com.palantir.dropwizard.websecurity.filters;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import com.google.common.net.HttpHeaders;
+import com.palantir.dropwizard.websecurity.WebSecurityConfiguration;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -25,7 +26,12 @@ public final class AppSecurityHeaderInjectorTests {
 
     @Test
     public void testDisabledNoHeaders() {
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(AppSecurityConfiguration.DISABLED);
+        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
+                .contentSecurityPolicy(WebSecurityConfiguration.TURN_OFF)
+                .contentTypeOptions(WebSecurityConfiguration.TURN_OFF)
+                .frameOptions(WebSecurityConfiguration.TURN_OFF)
+                .xssProtection(WebSecurityConfiguration.TURN_OFF)
+                .build());
 
         injector.injectHeaders(request, response);
 
@@ -38,7 +44,8 @@ public final class AppSecurityHeaderInjectorTests {
 
     @Test
     public void testHeadersReplacedNotAppended() {
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(AppSecurityConfiguration.DEFAULT);
+        WebSecurityConfiguration config = new WebSecurityConfiguration.Builder().build();
+        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(config);
 
         request.addHeader(HttpHeaders.USER_AGENT, AppSecurityHeaderInjector.USER_AGENT_IE_10);
 
@@ -59,7 +66,7 @@ public final class AppSecurityHeaderInjectorTests {
 
     @Test
     public void testContentSecurityPolicyNonIe10or11() {
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new AppSecurityConfiguration.Builder()
+        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
                 .contentSecurityPolicy(TEST_VALUE)
                 .build());
 
@@ -73,7 +80,7 @@ public final class AppSecurityHeaderInjectorTests {
 
     @Test
     public void testContentSecurityPolicyIe10() {
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new AppSecurityConfiguration.Builder()
+        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
                 .contentSecurityPolicy(TEST_VALUE)
                 .build());
 
@@ -87,7 +94,7 @@ public final class AppSecurityHeaderInjectorTests {
 
     @Test
     public void testContentSecurityPolicyIe11() {
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new AppSecurityConfiguration.Builder()
+        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
                 .contentSecurityPolicy(TEST_VALUE)
                 .build());
 
@@ -101,7 +108,7 @@ public final class AppSecurityHeaderInjectorTests {
 
     @Test
     public void testContentTypeOptions() {
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new AppSecurityConfiguration.Builder()
+        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
                 .contentTypeOptions(TEST_VALUE)
                 .build());
 
@@ -112,7 +119,7 @@ public final class AppSecurityHeaderInjectorTests {
 
     @Test
     public void testFrameOptions() {
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new AppSecurityConfiguration.Builder()
+        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
                 .frameOptions(TEST_VALUE)
                 .build());
 
@@ -123,32 +130,12 @@ public final class AppSecurityHeaderInjectorTests {
 
     @Test
     public void testXssProtection() {
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new AppSecurityConfiguration.Builder()
+        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
                 .xssProtection(TEST_VALUE)
                 .build());
 
         injector.injectHeaders(request, response);
 
         assertEquals(TEST_VALUE, response.getHeader(HttpHeaders.X_XSS_PROTECTION));
-    }
-
-    @Test
-    public void testTurningHeadersOff() {
-        AppSecurityHeaderInjector injector = new AppSecurityHeaderInjector(new AppSecurityConfiguration.Builder()
-                .contentSecurityPolicy(AppSecurityConfiguration.TURN_OFF)
-                .contentTypeOptions(AppSecurityConfiguration.TURN_OFF)
-                .frameOptions(AppSecurityConfiguration.TURN_OFF)
-                .xssProtection(AppSecurityConfiguration.TURN_OFF)
-                .build());
-
-        request.addHeader(HttpHeaders.USER_AGENT, AppSecurityHeaderInjector.USER_AGENT_IE_10);
-
-        injector.injectHeaders(request, response);
-
-        assertNull(response.getHeader(HttpHeaders.CONTENT_SECURITY_POLICY));
-        assertNull(response.getHeader(AppSecurityHeaderInjector.HEADER_IE_X_CONTENT_SECURITY_POLICY));
-        assertNull(response.getHeader(HttpHeaders.X_CONTENT_TYPE_OPTIONS));
-        assertNull(response.getHeader(HttpHeaders.X_FRAME_OPTIONS));
-        assertNull(response.getHeader(HttpHeaders.X_XSS_PROTECTION));
     }
 }

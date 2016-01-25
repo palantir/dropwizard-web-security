@@ -2,17 +2,15 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity.cors;
+package com.palantir.dropwizard.websecurity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableMap;
 import io.dropwizard.validation.ValidationMethod;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -31,17 +29,6 @@ public abstract class CorsConfiguration {
     private static final String DISABLED_ORIGINS = "";
 
     /**
-     * The default value of {@link #allowedOrigins()}. It's set to {@value #DISABLED_ORIGINS}, blocking all origins to
-     * provide a secure out-of-the-box experience.
-     */
-    public static final String DEFAULT_ALLOWED_ORIGINS = DISABLED_ORIGINS;
-
-    /**
-     * The default value of {@link #allowedMethods()}. It includes commonly used methods.
-     */
-    public static final String DEFAULT_ALLOWED_METHODS = "DELETE,GET,HEAD,POST,PUT";
-
-    /**
      * If set, will be used to set the initial property {@code allowCredentials}.
      */
     public abstract Optional<Boolean> allowCredentials();
@@ -52,20 +39,14 @@ public abstract class CorsConfiguration {
     public abstract Optional<String> allowedHeaders();
 
     /**
-     * Used to set the initial property {@code allowedMethods}. The default value is {@value #DEFAULT_ALLOWED_METHODS}.
+     * If set, will be used to set the initial property {@code allowedMethods}.
      */
-    @Value.Default
-    public String allowedMethods() {
-        return DEFAULT_ALLOWED_METHODS;
-    }
+    public abstract Optional<String> allowedMethods();
 
     /**
-     * Used to set the initial property {@code allowedOrigins}. The default value is {@value #DEFAULT_ALLOWED_ORIGINS}.
+     * If set, will be used to set the initial property {@code allowedOrigins}.
      */
-    @Value.Default
-    public String allowedOrigins() {
-        return DEFAULT_ALLOWED_ORIGINS;
-    }
+    public abstract Optional<String> allowedOrigins();
 
     /**
      * Determines if {@link CrossOriginFilter} is applied. Returns true if there is an {@link #allowedOrigins()} value
@@ -73,7 +54,7 @@ public abstract class CorsConfiguration {
      */
     @Value.Derived
     public boolean enabled() {
-        return !DISABLED_ORIGINS.equals(allowedOrigins());
+        return !allowedOrigins().or(DISABLED_ORIGINS).isEmpty();
     }
 
     /**
@@ -86,36 +67,6 @@ public abstract class CorsConfiguration {
      */
     public abstract Optional<Long> preflightMaxAge();
 
-    /**
-     * Constructs a property map used to initiate the {@link CrossOriginFilter}.
-     */
-    public Map<String, String> getPropertyMap() {
-        ImmutableMap.Builder<String, String> propertiesBuilder = ImmutableMap.builder();
-
-        propertiesBuilder.put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, allowedOrigins());
-        propertiesBuilder.put(CrossOriginFilter.ALLOWED_METHODS_PARAM, allowedMethods());
-
-        if (allowedHeaders().isPresent()) {
-            propertiesBuilder.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM, allowedHeaders().get());
-        }
-
-        if (preflightMaxAge().isPresent()) {
-            propertiesBuilder.put(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM, Long.toString(preflightMaxAge().get()));
-        }
-
-        if (allowCredentials().isPresent()) {
-            propertiesBuilder.put(
-                    CrossOriginFilter.ALLOW_CREDENTIALS_PARAM,
-                    Boolean.toString(allowCredentials().get()));
-        }
-
-        if (exposedHeaders().isPresent()) {
-            propertiesBuilder.put(CrossOriginFilter.EXPOSED_HEADERS_PARAM, exposedHeaders().get());
-        }
-
-        return propertiesBuilder.build();
-    }
-
     @ValidationMethod(message = "preflightMaxAge can't be negative")
     private boolean isPreflightMaxAgeNegative() {
         return preflightMaxAge().or(0L) >= 0L;
@@ -123,14 +74,18 @@ public abstract class CorsConfiguration {
 
     @ValidationMethod(message = "allowedOrigins can't contain malformed URLs, URLs with a path, or malformed regex")
     private boolean isAllowedOriginsValid() {
-        if ("*".equals(allowedOrigins())) {
+        if (!allowedOrigins().isPresent()) {
+            return true;
+        }
+
+        if ("*".equals(allowedOrigins().get())) {
             return true;
         }
 
         List<String> origins = Splitter.on(",")
                 .omitEmptyStrings()
                 .trimResults()
-                .splitToList(allowedOrigins());
+                .splitToList(allowedOrigins().get());
 
         for (String origin : origins) {
             if (!validateOrigin(origin)) {
@@ -142,12 +97,9 @@ public abstract class CorsConfiguration {
     }
 
     /**
-     * Validates the origin, by the following rules:
-     * <ul>
-     * <li>Origins that are just {@code "*"} are not passed through</li>
-     * <li>If it contains a {@code *}, then it must be a valid regular expression.</li>
-     * <li>It must be a valid URL, without a path component</li>
-     * </ul>
+     * Validates the origin, by the following rules: <ul> <li>Origins that are just {@code "*"} are not passed
+     * through</li> <li>If it contains a {@code *}, then it must be a valid regular expression.</li> <li>It must be a
+     * valid URL, without a path component</li> </ul>
      */
     private static boolean validateOrigin(String origin) {
         try {
