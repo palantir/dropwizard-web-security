@@ -23,10 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 public final class AppSecurityFilter implements Filter {
 
     private final AppSecurityHeaderInjector injector;
+    private final String jerseyRoot;
 
-    public AppSecurityFilter(WebSecurityConfiguration config) {
+    public AppSecurityFilter(WebSecurityConfiguration config, String jerseyRoot) {
         checkNotNull(config);
+        checkNotNull(jerseyRoot);
+
         this.injector = new AppSecurityHeaderInjector(config);
+        this.jerseyRoot = cleanJerseyRoot(jerseyRoot);
     }
 
     @Override
@@ -48,9 +52,38 @@ public final class AppSecurityFilter implements Filter {
         checkNotNull(chain);
 
         if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
-            this.injector.injectHeaders((HttpServletRequest) request, (HttpServletResponse) response);
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
+
+            if (!isJerseyRequest(httpRequest)) {
+                this.injector.injectHeaders(httpRequest, (HttpServletResponse) response);
+            }
         }
 
         chain.doFilter(request, response);
+    }
+
+    private boolean isJerseyRequest(HttpServletRequest request) {
+        return this.jerseyRoot.equals(request.getServletPath().toLowerCase());
+    }
+
+    /**
+     * Cleans the Jersey root path to start with a slash and end without a star or slash.
+     */
+    private static String cleanJerseyRoot(String rawJerseyRoot) {
+        String cleaned = rawJerseyRoot;
+
+        if (cleaned.endsWith("*")) {
+            cleaned = cleaned.substring(0, cleaned.length() - 1);
+        }
+
+        if (cleaned.endsWith("/")) {
+            cleaned = cleaned.substring(0, cleaned.length() - 1);
+        }
+
+        if (!cleaned.startsWith("/")) {
+            cleaned = "/" + cleaned;
+        }
+
+        return cleaned;
     }
 }

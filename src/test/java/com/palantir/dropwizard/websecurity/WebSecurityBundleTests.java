@@ -16,7 +16,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.common.base.Optional;
-import com.palantir.dropwizard.websecurity.filters.HstsFilter;
 import io.dropwizard.setup.Environment;
 import java.util.Map;
 import javax.servlet.Filter;
@@ -44,7 +43,6 @@ public final class WebSecurityBundleTests {
         bundle.run(this.appConfig, this.environment);
 
         verify(this.environment.servlets(), never()).addFilter(anyString(), isA(CrossOriginFilter.class));
-        verify(this.environment.servlets(), never()).addFilter(anyString(), isA(HstsFilter.class));
     }
 
     @Test
@@ -52,7 +50,6 @@ public final class WebSecurityBundleTests {
         WebSecurityBundle bundle = new WebSecurityBundle();
         WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
                 .cors(new CorsConfiguration.Builder().allowedOrigins("http://origin").build())
-                .hsts("on")
                 .build();
 
         when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(webSecurityConfig));
@@ -60,7 +57,6 @@ public final class WebSecurityBundleTests {
         bundle.run(this.appConfig, this.environment);
 
         verify(this.environment.servlets()).addFilter(anyString(), isA(CrossOriginFilter.class));
-        verify(this.environment.servlets()).addFilter(anyString(), isA(HstsFilter.class));
     }
 
     @Test
@@ -68,7 +64,6 @@ public final class WebSecurityBundleTests {
         WebSecurityBundle bundle = new WebSecurityBundle();
         WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
                 .cors(CorsConfiguration.DISABLED)
-                .hsts(WebSecurityConfiguration.TURN_OFF)
                 .build();
 
         when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(webSecurityConfig));
@@ -76,18 +71,15 @@ public final class WebSecurityBundleTests {
         bundle.run(this.appConfig, this.environment);
 
         verify(this.environment.servlets(), never()).addFilter(anyString(), isA(CrossOriginFilter.class));
-        verify(this.environment.servlets(), never()).addFilter(anyString(), isA(HstsFilter.class));
     }
 
     @Test
     public void testYamlOverridesAppDefaults() throws Exception {
         WebSecurityConfiguration appDefaultConfig = new WebSecurityConfiguration.Builder()
                 .cors(new CorsConfiguration.Builder().allowedOrigins("http://origin").build())
-                .hsts("on")
                 .build();
         WebSecurityConfiguration yamlConfig = new WebSecurityConfiguration.Builder()
                 .cors(CorsConfiguration.DISABLED)
-                .hsts(WebSecurityConfiguration.TURN_OFF)
                 .build();
         WebSecurityBundle bundle = new WebSecurityBundle(appDefaultConfig);
 
@@ -96,7 +88,6 @@ public final class WebSecurityBundleTests {
         bundle.run(this.appConfig, this.environment);
 
         verify(this.environment.servlets(), never()).addFilter(anyString(), isA(CrossOriginFilter.class));
-        verify(this.environment.servlets(), never()).addFilter(anyString(), isA(HstsFilter.class));
     }
 
     @Test

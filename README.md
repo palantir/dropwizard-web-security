@@ -17,45 +17,25 @@ Usage
 	```java
 	public class ExampleApplication extends Application<ExampleConfiguration> {
 
-	    private final WebSecurityBundle webSecurityBundle = new WebSecurityBundle();
-
 	    @Override
 	    public void initialize(Bootstrap<ExampleConfiguration> bootstrap) {
-	        bootstrap.addBundle(webSecurityBundle);
+	        bootstrap.addBundle(new WebSecurityBundle());
 	    }
     }
 
     ```
 
-3. Add the `AppSecurityFilter` filter to your environment:
-
-    ```java
-    @Override
-    public void run(ExampleConfiguration configuration, Environment environment) throws Exception {
-        // will build a filter from the derived configuration
-        AppSecurityFilter filter = new AppSecurityFilter(this.webSecurityBundle.getDerivedConfiguration());
-
-        // add the filter to your environment
-        environment.servlets()
-                .addFilter("AppSecurityFilter", filter)
-                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
-    }
-    ```
-
 
 Configuration
 -------------
-App Security headers are **not added by default**. You will need to add the `AppSecurityFilter` to your environment
-manually. See the example code for specifics.
-
-The following are the default values, only specify values if they differ from the default values shown below.
+App Security headers are **added by default**. The following are the default values, only specify values in your
+configuration if they differ from the default values shown below.
 
 ```yaml
 webSecurity:
   contentSecurityPolicy: "default-src 'self'"     # Content-Security-Policy and X-Content-Security-Policy
   contentTypeOptions: "nosniff"                   # X-Content-Type-Options
   frameOptions: "sameorigin"                      # X-Frame-Options
-  hsts: ""                                        # Strict-Transport-Security
   xssProtection: "1; mode=block"                  # X-XSS-Protection
 ```
 

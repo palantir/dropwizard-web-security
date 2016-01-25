@@ -34,11 +34,6 @@ public abstract class WebSecurityConfiguration {
     public abstract Optional<String> frameOptions();
 
     /**
-     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#STRICT_TRANSPORT_SECURITY}.
-     */
-    public abstract Optional<String> hsts();
-
-    /**
      * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#X_XSS_PROTECTION}.
      */
     public abstract Optional<String> xssProtection();

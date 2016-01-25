@@ -11,13 +11,11 @@ import com.palantir.dropwizard.websecurity.CorsConfiguration;
 import com.palantir.dropwizard.websecurity.WebSecurityBundle;
 import com.palantir.dropwizard.websecurity.WebSecurityConfigurable;
 import com.palantir.dropwizard.websecurity.WebSecurityConfiguration;
-import com.palantir.dropwizard.websecurity.filters.AppSecurityFilter;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import java.util.EnumSet;
-import javax.servlet.DispatcherType;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -32,6 +30,10 @@ public final class Example {
 
     private Example() {
         // utility class for testing
+    }
+
+    public static void main(String[] args) throws Exception {
+        new ExampleApplication().run(args);
     }
 
     @Path("hello")
@@ -81,19 +83,12 @@ public final class Example {
         @Override
         public void initialize(Bootstrap<ExampleConfiguration> bootstrap) {
             bootstrap.addBundle(webSecurityBundle);
+            bootstrap.addBundle(new AssetsBundle("/assets/", "/", "index.html"));
         }
 
         @Override
         public void run(ExampleConfiguration configuration, Environment environment) throws Exception {
             environment.jersey().register(new ExampleResource());
-
-            // will build a filter from the derived configuration
-            AppSecurityFilter filter = new AppSecurityFilter(this.webSecurityBundle.getDerivedConfiguration());
-
-            // add the filter to your environment
-            environment.servlets()
-                    .addFilter("AppSecurityFilter", filter)
-                    .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
         }
     }
 }
