@@ -119,6 +119,11 @@ public static final class ExampleApplication extends Application<ExampleConfigur
 ```
 
 
+Contributing
+------------
+Before working on the code, if you plan to contribute changes, please read the [CONTRIBUTING](CONTRIBUTING.md) document.
+
+
 License
 -------
 This project is made available under the [Apache 2.0 License][license].
