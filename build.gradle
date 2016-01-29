@@ -29,6 +29,7 @@ dependencies {
 
     processor "org.immutables:value:$immutablesVersion"
 
+    testCompile "io.dropwizard:dropwizard-assets:$dropwizardVersion"
     testCompile "io.dropwizard:dropwizard-client:$dropwizardVersion"
     testCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
     testCompile "junit:junit:$junitVersion"

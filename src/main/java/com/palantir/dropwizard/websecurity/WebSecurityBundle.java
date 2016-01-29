@@ -8,8 +8,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.google.common.collect.ImmutableMap;
-import com.palantir.dropwizard.websecurity.filters.HstsFilter;
+import com.palantir.dropwizard.websecurity.filters.AppSecurityFilter;
+import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
+import io.dropwizard.server.AbstractServerFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.EnumSet;
@@ -67,8 +69,8 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
 
         this.derivedConfiguration = builder.build();
 
-        applyCors(derivedConfiguration, environment);
-        applyHsts(derivedConfiguration, environment);
+        applyCors(this.derivedConfiguration, environment);
+        applyAppSecurity(this.derivedConfiguration, environment, getJerseyRootPath(configuration));
     }
 
     /**
@@ -84,9 +86,9 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
             return;
         }
 
-        CrossOriginFilter crossOriginFilter = new CrossOriginFilter();
+        CrossOriginFilter filter = new CrossOriginFilter();
 
-        FilterRegistration.Dynamic dynamic = environment.servlets().addFilter("CrossOriginFilter", crossOriginFilter);
+        FilterRegistration.Dynamic dynamic = environment.servlets().addFilter("CrossOriginFilter", filter);
         dynamic.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, ROOT_PATH);
         dynamic.setInitParameters(buildCorsPropertyMap(derivedConfig.cors().get()));
     }
@@ -118,12 +120,28 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         return propertyBuilder.build();
     }
 
-    private static void applyHsts(WebSecurityConfiguration derivedConfig, Environment environment) {
-        String hsts = derivedConfig.hsts().or("");
-        if (!hsts.isEmpty()) {
-            environment.servlets()
-                    .addFilter("HstsFilter", new HstsFilter(hsts))
-                    .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, ROOT_PATH);
+    private static void applyAppSecurity(WebSecurityConfiguration derivedConfig, Environment env, String jerseyRoot) {
+        AppSecurityFilter filter = new AppSecurityFilter(derivedConfig, jerseyRoot);
+        env.servlets()
+                .addFilter("AppSecurityFilter", filter)
+                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, ROOT_PATH);
+    }
+
+    /**
+     * Determines the Jersey Root Path by pulling it from the {@link AbstractServerFactory}. If the value cannot be
+     * found, then the default value of {@code /*} is used instead.
+     */
+    private static String getJerseyRootPath(WebSecurityConfigurable configuration) {
+        String rootPath = "/*";
+
+        if (configuration instanceof Configuration) {
+            Configuration dwConfig = (Configuration) configuration;
+            if (dwConfig.getServerFactory() instanceof AbstractServerFactory) {
+                AbstractServerFactory abstractServerFactory = (AbstractServerFactory) dwConfig.getServerFactory();
+                rootPath = abstractServerFactory.getJerseyRootPath();
+            }
         }
+
+        return rootPath;
     }
 }
