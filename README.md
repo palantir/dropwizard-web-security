@@ -5,7 +5,6 @@ dropwizard-web-security
 A bundle for applying default web security functionality to a dropwizard application. It covers the following areas:
 
 - [Cross-Origin Resource Sharing (CORS)][cors1] [\[2\]][cors2] [\[3\]][cors3]
-- [HTTP Strict Transport Security (HSTS)][hsts1] [\[2\]][hsts2] [\[3\]][hsts3]
 - Web Application Security Headers ([Content Security Policy][csp], etc.)
 
 
@@ -112,9 +111,6 @@ This project is made available under the [Apache 2.0 License][license].
 [cors1]: https://www.w3.org/TR/cors/
 [cors2]: https://www.owasp.org/index.php/CORS_OriginHeaderScrutiny
 [cors3]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
-[hsts1]: https://tools.ietf.org/id/draft-ietf-websec-strict-transport-sec-14.txt
-[hsts2]: https://www.owasp.org/index.php/HTTP_Strict_Transport_Security
-[hsts3]: https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security
 [csp]: https://developer.mozilla.org/en-US/docs/Web/Security/CSP
 
 [corsfilter]: http://download.eclipse.org/jetty/9.2.13.v20150730/apidocs/org/eclipse/jetty/servlets/CrossOriginFilter.html
