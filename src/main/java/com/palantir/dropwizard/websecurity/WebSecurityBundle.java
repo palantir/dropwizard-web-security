@@ -30,6 +30,11 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
      */
     public static final String DEFAULT_ALLOWED_METHODS = "DELETE,GET,HEAD,POST,PUT";
 
+    /**
+     * The default value of CORS Allowed Headers. It includes {@code Authorization} for auth purposes.
+     */
+    public static final String DEFAULT_ALLOWED_HEADERS = "Accept,Authorization,Content-Type,Origin,X-Requested-With";
+
     private static final String ROOT_PATH = "/*";
 
     private final WebSecurityConfiguration applicationDefaults;
@@ -98,10 +103,7 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
 
         propertyBuilder.put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, cors.allowedOrigins().get());
         propertyBuilder.put(CrossOriginFilter.ALLOWED_METHODS_PARAM, cors.allowedMethods().or(DEFAULT_ALLOWED_METHODS));
-
-        if (cors.allowedHeaders().isPresent()) {
-            propertyBuilder.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM, cors.allowedHeaders().get());
-        }
+        propertyBuilder.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM, cors.allowedHeaders().or(DEFAULT_ALLOWED_HEADERS));
 
         if (cors.preflightMaxAge().isPresent()) {
             propertyBuilder.put(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM, Long.toString(cors.preflightMaxAge().get()));
