@@ -51,7 +51,7 @@ The following are the default values, only specify values if they differ from th
 webSecurity:
   cors:
     allowCredentials: true
-    allowedHeaders: "X-Requested-With,Content-Type,Accept,Origin"
+    allowedHeaders: "Accept,Authorization,Content-Type,Origin,X-Requested-With"
     allowedMethods: "DELETE,GET,HEAD,POST,PUT"
     allowedOrigins: ""
     exposedHeaders: ""
@@ -61,6 +61,7 @@ webSecurity:
 **NOTE:** The values shown are from [`CrossOriginFilter`][corsfilter], except the following:
 
 - `allowedOrigins` - set to blank instead of `"*"` to require the user to enter the allowed origins
+- `allowedHeaders` - set to include the default set of headers and the `Authorization` header for auth purposes
 - `allowedMethods` - set to include a default set of commonly used methods
 
 

@@ -109,8 +109,8 @@ public final class WebSecurityBundleTests {
         verify(dynamic).setInitParameters(paramCaptor.capture());
 
         Map<String, String> captured = paramCaptor.getValue();
+        assertEquals(WebSecurityBundle.DEFAULT_ALLOWED_HEADERS, captured.get(CrossOriginFilter.ALLOWED_HEADERS_PARAM));
         assertEquals(WebSecurityBundle.DEFAULT_ALLOWED_METHODS, captured.get(CrossOriginFilter.ALLOWED_METHODS_PARAM));
-        assertNull(captured.get(CrossOriginFilter.ALLOWED_HEADERS_PARAM));
         assertNull(captured.get(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM));
         assertNull(captured.get(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM));
         assertNull(captured.get(CrossOriginFilter.EXPOSED_HEADERS_PARAM));
