@@ -116,7 +116,7 @@ This project is made available under the [Apache 2.0 License][license].
 [cors3]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
 [csp]: https://developer.mozilla.org/en-US/docs/Web/Security/CSP
 
-[example-config]: http://www.github.com
+[example-config]: /src/test/java/example/Example.java
 
 [corsfilter]: http://download.eclipse.org/jetty/9.2.13.v20150730/apidocs/org/eclipse/jetty/servlets/CrossOriginFilter.html
 
