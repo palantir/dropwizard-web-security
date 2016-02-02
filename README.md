@@ -50,7 +50,7 @@ The following are the default values, only specify values if they differ from th
 ```yaml
 webSecurity:
   cors:
-    allowCredentials: true
+    allowCredentials: false
     allowedHeaders: "Accept,Authorization,Content-Type,Origin,X-Requested-With"
     allowedMethods: "DELETE,GET,HEAD,POST,PUT"
     allowedOrigins: ""
@@ -61,7 +61,8 @@ webSecurity:
 **NOTE:** The values shown are from [`CrossOriginFilter`][corsfilter], except the following:
 
 - `allowedOrigins` - set to blank instead of `"*"` to require the user to enter the allowed origins
-- `allowedHeaders` - set to include the default set of headers and the `Authorization` header for auth purposes
+- `allowCredentials` - set to false by default since credentials should be passed via the `Authorization` header
+- `allowedHeaders` - set to include the default set of headers and the `Authorization` header
 - `allowedMethods` - set to include a default set of commonly used methods
 
 
