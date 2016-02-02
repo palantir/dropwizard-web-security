@@ -43,5 +43,10 @@ public abstract class WebSecurityConfiguration {
      */
     public abstract Optional<CorsConfiguration> cors();
 
+    /**
+     * Provides a configuration with default values.
+     */
+    public static final WebSecurityConfiguration DEFAULT = new WebSecurityConfiguration.Builder().build();
+
     public static class Builder extends ImmutableWebSecurityConfiguration.Builder {}
 }
