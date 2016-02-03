@@ -52,7 +52,7 @@ webSecurity:
   cors:
     allowCredentials: true
     allowedHeaders: "Accept,Authorization,Content-Type,Origin,X-Requested-With"
-    allowedMethods: "DELETE,GET,HEAD,POST,PUT"
+    allowedMethods: "DELETE,GET,HEAD,OPTIONS,POST,PUT"
     allowedOrigins: ""
     exposedHeaders: ""
     preflightMaxAge: 1800
