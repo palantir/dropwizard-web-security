@@ -35,6 +35,11 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
      */
     public static final String DEFAULT_ALLOWED_HEADERS = "Accept,Authorization,Content-Type,Origin,X-Requested-With";
 
+    /**
+     * The default value of CORS Allow Credentials. Credentials should be passed via the {@code Authorization} header.
+     */
+    public static final boolean DEFAULT_ALLOW_CREDENTIALS = false;
+
     private static final String ROOT_PATH = "/*";
 
     private final WebSecurityConfiguration applicationDefaults;
@@ -105,14 +110,11 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         propertyBuilder.put(CrossOriginFilter.ALLOWED_METHODS_PARAM, cors.allowedMethods().or(DEFAULT_ALLOWED_METHODS));
         propertyBuilder.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM, cors.allowedHeaders().or(DEFAULT_ALLOWED_HEADERS));
 
+        String allowCredentials = Boolean.toString(cors.allowCredentials().or(DEFAULT_ALLOW_CREDENTIALS));
+        propertyBuilder.put(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, allowCredentials);
+
         if (cors.preflightMaxAge().isPresent()) {
             propertyBuilder.put(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM, Long.toString(cors.preflightMaxAge().get()));
-        }
-
-        if (cors.allowCredentials().isPresent()) {
-            propertyBuilder.put(
-                    CrossOriginFilter.ALLOW_CREDENTIALS_PARAM,
-                    Boolean.toString(cors.allowCredentials().get()));
         }
 
         if (cors.exposedHeaders().isPresent()) {
