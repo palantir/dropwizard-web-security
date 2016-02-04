@@ -70,12 +70,9 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         checkNotNull(configuration);
         checkNotNull(environment);
 
-        WebSecurityConfiguration.Builder builder = new WebSecurityConfiguration.Builder();
-        builder.from(applicationDefaults);
-
-        if (configuration.getWebSecurityConfiguration().isPresent()) {
-            builder.from(configuration.getWebSecurityConfiguration().get());
-        }
+        WebSecurityConfiguration.Builder builder = new WebSecurityConfiguration.Builder()
+                .from(applicationDefaults)
+                .from(configuration.getWebSecurityConfiguration());
 
         this.derivedConfiguration = builder.build();
 

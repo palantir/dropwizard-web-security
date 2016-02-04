@@ -10,7 +10,9 @@ A bundle for applying default web security functionality to a dropwizard applica
 
 Usage
 -----
-1. Ensure your configuration implements `WebSecurityConfigurable`.
+1. Ensure your configuration implements `WebSecurityConfigurable`. **NOTE:** Since there are sane defaults, it's best to
+   have the configuration be parsed as an `Optional`. See the [`ExampleConfiguration`][example-config] for example code.
+
 2. Add the bundle to your application:
 
 	```java
@@ -114,6 +116,8 @@ This project is made available under the [Apache 2.0 License][license].
 [cors2]: https://www.owasp.org/index.php/CORS_OriginHeaderScrutiny
 [cors3]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
 [csp]: https://developer.mozilla.org/en-US/docs/Web/Security/CSP
+
+[example-config]: /src/test/java/example/Example.java#L49-L64
 
 [corsfilter]: http://download.eclipse.org/jetty/9.2.13.v20150730/apidocs/org/eclipse/jetty/servlets/CrossOriginFilter.html
 

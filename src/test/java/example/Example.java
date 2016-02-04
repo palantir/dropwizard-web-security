@@ -48,17 +48,17 @@ public final class Example {
 
     public static final class ExampleConfiguration extends Configuration implements WebSecurityConfigurable {
 
-        private final Optional<WebSecurityConfiguration> webSecurityConfiguration;
+        private final WebSecurityConfiguration webSecurityConfiguration;
 
         @JsonCreator
         public ExampleConfiguration(
                 @JsonProperty("webSecurity") Optional<WebSecurityConfiguration> webSecurityConfigurationOptional) {
 
-            this.webSecurityConfiguration = webSecurityConfigurationOptional;
+            this.webSecurityConfiguration = webSecurityConfigurationOptional.or(WebSecurityConfiguration.DEFAULT);
         }
 
         @Override
-        public Optional<WebSecurityConfiguration> getWebSecurityConfiguration() {
+        public WebSecurityConfiguration getWebSecurityConfiguration() {
             return this.webSecurityConfiguration;
         }
     }

@@ -15,7 +15,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.common.base.Optional;
 import io.dropwizard.setup.Environment;
 import java.util.Map;
 import javax.servlet.Filter;
@@ -38,7 +37,7 @@ public final class WebSecurityBundleTests {
         WebSecurityBundle bundle = new WebSecurityBundle();
         WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder().build();
 
-        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(webSecurityConfig));
+        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(webSecurityConfig);
 
         bundle.run(this.appConfig, this.environment);
 
@@ -52,7 +51,7 @@ public final class WebSecurityBundleTests {
                 .cors(new CorsConfiguration.Builder().allowedOrigins("http://origin").build())
                 .build();
 
-        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(webSecurityConfig));
+        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(webSecurityConfig);
 
         bundle.run(this.appConfig, this.environment);
 
@@ -66,7 +65,7 @@ public final class WebSecurityBundleTests {
                 .cors(CorsConfiguration.DISABLED)
                 .build();
 
-        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(webSecurityConfig));
+        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(webSecurityConfig);
 
         bundle.run(this.appConfig, this.environment);
 
@@ -83,7 +82,7 @@ public final class WebSecurityBundleTests {
                 .build();
         WebSecurityBundle bundle = new WebSecurityBundle(appDefaultConfig);
 
-        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(yamlConfig));
+        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(yamlConfig);
 
         bundle.run(this.appConfig, this.environment);
 
@@ -101,7 +100,7 @@ public final class WebSecurityBundleTests {
         WebSecurityBundle bundle = new WebSecurityBundle(appDefaultConfig);
 
         when(environment.servlets().addFilter(anyString(), any(Filter.class))).thenReturn(dynamic);
-        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(appDefaultConfig));
+        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(appDefaultConfig);
 
         bundle.run(appConfig, environment);
 
@@ -136,7 +135,7 @@ public final class WebSecurityBundleTests {
         WebSecurityBundle bundle = new WebSecurityBundle(appDefaultConfig);
 
         when(environment.servlets().addFilter(anyString(), any(Filter.class))).thenReturn(dynamic);
-        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(appDefaultConfig));
+        when(this.appConfig.getWebSecurityConfiguration()).thenReturn(appDefaultConfig);
 
         bundle.run(appConfig, environment);
 
