@@ -28,7 +28,7 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
     /**
      * The default value of CORS Allowed Methods. It includes commonly used methods.
      */
-    public static final String DEFAULT_ALLOWED_METHODS = "DELETE,GET,HEAD,POST,PUT";
+    public static final String DEFAULT_ALLOWED_METHODS = "DELETE,GET,HEAD,OPTIONS,POST,PUT";
 
     /**
      * The default value of CORS Allowed Headers. It includes {@code Authorization} for auth purposes.
