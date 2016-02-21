@@ -43,5 +43,31 @@ public abstract class WebSecurityConfiguration {
      */
     public abstract Optional<CorsConfiguration> cors();
 
-    public static class Builder extends ImmutableWebSecurityConfiguration.Builder {}
+    /**
+     * Provides a configuration with default values.
+     */
+    public static final WebSecurityConfiguration DEFAULT = WebSecurityConfiguration.builder().build();
+
+    // hides implementation details
+    public static Builder builder() {
+        return ImmutableWebSecurityConfiguration.builder();
+    }
+
+    // hides implementation details
+    public interface Builder {
+
+        Builder contentSecurityPolicy(String contentSecurityPolicy);
+
+        Builder contentTypeOptions(String contentTypeOptions);
+
+        Builder frameOptions(String frameOptions);
+
+        Builder xssProtection(String xssProtection);
+
+        Builder cors(CorsConfiguration corsConfiguration);
+
+        Builder from(WebSecurityConfiguration otherConfig);
+
+        WebSecurityConfiguration build();
+    }
 }

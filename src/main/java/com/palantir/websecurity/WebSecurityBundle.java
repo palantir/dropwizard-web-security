@@ -49,7 +49,7 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
      * Constructs a bundle with the out of the box defaults.
      */
     public WebSecurityBundle() {
-        this(new WebSecurityConfiguration.Builder().build());
+        this(WebSecurityConfiguration.builder().build());
     }
 
     /**
@@ -70,7 +70,7 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         checkNotNull(configuration);
         checkNotNull(environment);
 
-        WebSecurityConfiguration.Builder builder = new WebSecurityConfiguration.Builder();
+        WebSecurityConfiguration.Builder builder = WebSecurityConfiguration.builder();
         builder.from(applicationDefaults);
 
         if (configuration.getWebSecurityConfiguration().isPresent()) {

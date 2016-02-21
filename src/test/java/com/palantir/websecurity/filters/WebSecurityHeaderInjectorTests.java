@@ -26,7 +26,7 @@ public final class WebSecurityHeaderInjectorTests {
 
     @Test
     public void testDisabledNoHeaders() {
-        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
+        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(WebSecurityConfiguration.builder()
                 .contentSecurityPolicy(WebSecurityConfiguration.TURN_OFF)
                 .contentTypeOptions(WebSecurityConfiguration.TURN_OFF)
                 .frameOptions(WebSecurityConfiguration.TURN_OFF)
@@ -44,7 +44,7 @@ public final class WebSecurityHeaderInjectorTests {
 
     @Test
     public void testHeadersReplacedNotAppended() {
-        WebSecurityConfiguration config = new WebSecurityConfiguration.Builder().build();
+        WebSecurityConfiguration config = WebSecurityConfiguration.DEFAULT;
         WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(config);
 
         request.addHeader(HttpHeaders.USER_AGENT, WebSecurityHeaderInjector.USER_AGENT_IE_10);
@@ -66,7 +66,7 @@ public final class WebSecurityHeaderInjectorTests {
 
     @Test
     public void testContentSecurityPolicyNonIe10or11() {
-        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
+        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(WebSecurityConfiguration.builder()
                 .contentSecurityPolicy(TEST_VALUE)
                 .build());
 
@@ -80,7 +80,7 @@ public final class WebSecurityHeaderInjectorTests {
 
     @Test
     public void testContentSecurityPolicyIe10() {
-        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
+        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(WebSecurityConfiguration.builder()
                 .contentSecurityPolicy(TEST_VALUE)
                 .build());
 
@@ -94,7 +94,7 @@ public final class WebSecurityHeaderInjectorTests {
 
     @Test
     public void testContentSecurityPolicyIe11() {
-        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
+        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(WebSecurityConfiguration.builder()
                 .contentSecurityPolicy(TEST_VALUE)
                 .build());
 
@@ -108,7 +108,7 @@ public final class WebSecurityHeaderInjectorTests {
 
     @Test
     public void testContentTypeOptions() {
-        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
+        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(WebSecurityConfiguration.builder()
                 .contentTypeOptions(TEST_VALUE)
                 .build());
 
@@ -119,7 +119,7 @@ public final class WebSecurityHeaderInjectorTests {
 
     @Test
     public void testFrameOptions() {
-        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
+        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(WebSecurityConfiguration.builder()
                 .frameOptions(TEST_VALUE)
                 .build());
 
@@ -130,7 +130,7 @@ public final class WebSecurityHeaderInjectorTests {
 
     @Test
     public void testXssProtection() {
-        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(new WebSecurityConfiguration.Builder()
+        WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(WebSecurityConfiguration.builder()
                 .xssProtection(TEST_VALUE)
                 .build());
 

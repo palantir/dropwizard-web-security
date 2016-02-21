@@ -29,7 +29,7 @@ public final class CorsConfigurationTests {
 
     @Test
     public void testAllowedOrigins_allowStar() {
-        CorsConfiguration config = new CorsConfiguration.Builder().allowedOrigins("*").build();
+        CorsConfiguration config = CorsConfiguration.builder().allowedOrigins("*").build();
 
         Set<ConstraintViolation<CorsConfiguration>> violations = VALIDATOR.validate(config);
         assertTrue(violations.isEmpty());
@@ -37,7 +37,7 @@ public final class CorsConfigurationTests {
 
     @Test
     public void testAllowedOrigins_invalidUrl() {
-        CorsConfiguration config = new CorsConfiguration.Builder()
+        CorsConfiguration config = CorsConfiguration.builder()
                 .allowedOrigins("http://good.url,:/123/this/is/not/a.valid.url")
                 .build();
 
@@ -47,7 +47,7 @@ public final class CorsConfigurationTests {
 
     @Test
     public void testAllowedOrigins_urlCannotHavePath() {
-        CorsConfiguration config = new CorsConfiguration.Builder()
+        CorsConfiguration config = CorsConfiguration.builder()
                 .allowedOrigins("http://good.url,http://url.with.path/")
                 .build();
 
@@ -57,7 +57,7 @@ public final class CorsConfigurationTests {
 
     @Test
     public void testAllowedOrigins_validRegex() {
-        CorsConfiguration config = new CorsConfiguration.Builder()
+        CorsConfiguration config = CorsConfiguration.builder()
                 .allowedOrigins("http://*(dfdfd).$")
                 .build();
 
@@ -67,7 +67,7 @@ public final class CorsConfigurationTests {
 
     @Test
     public void testAllowedOrigins_invalidRegex() {
-        CorsConfiguration config = new CorsConfiguration.Builder()
+        CorsConfiguration config = CorsConfiguration.builder()
                 .allowedOrigins("http://*(dfdfd")
                 .build();
 
@@ -77,7 +77,7 @@ public final class CorsConfigurationTests {
 
     @Test
     public void testPreflightMaxAge_cannotBeNegative() {
-        CorsConfiguration config = new CorsConfiguration.Builder()
+        CorsConfiguration config = CorsConfiguration.builder()
                 .preflightMaxAge(-1L)
                 .build();
 

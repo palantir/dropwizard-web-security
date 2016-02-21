@@ -65,7 +65,7 @@ public final class Example {
 
     public static final class ExampleApplication extends Application<ExampleConfiguration> {
 
-        private final WebSecurityConfiguration webSecurityDefaults = new WebSecurityConfiguration.Builder()
+        private final WebSecurityConfiguration webSecurityDefaults = WebSecurityConfiguration.builder()
 
                 // set app defaults for different header values
                 .contentSecurityPolicy(CSP_FROM_APP)
@@ -73,7 +73,7 @@ public final class Example {
 
                 // CORS is still DISABLED, since the allowedOrigins is not set, but the default value will be
                 // respected if it's ever turned on
-                .cors(new CorsConfiguration.Builder()
+                .cors(CorsConfiguration.builder()
                         .preflightMaxAge(60 * 10)
                         .build())
                 .build();

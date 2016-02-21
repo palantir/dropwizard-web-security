@@ -36,7 +36,7 @@ public final class WebSecurityBundleTests {
     @Test
     public void testDefaultFiltersApplied() throws Exception {
         WebSecurityBundle bundle = new WebSecurityBundle();
-        WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder().build();
+        WebSecurityConfiguration webSecurityConfig = WebSecurityConfiguration.DEFAULT;
 
         when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(webSecurityConfig));
 
@@ -48,8 +48,8 @@ public final class WebSecurityBundleTests {
     @Test
     public void testFiltersAppliedWhenEnabled() throws Exception {
         WebSecurityBundle bundle = new WebSecurityBundle();
-        WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
-                .cors(new CorsConfiguration.Builder().allowedOrigins("http://origin").build())
+        WebSecurityConfiguration webSecurityConfig = WebSecurityConfiguration.builder()
+                .cors(CorsConfiguration.builder().allowedOrigins("http://origin").build())
                 .build();
 
         when(this.appConfig.getWebSecurityConfiguration()).thenReturn(Optional.of(webSecurityConfig));
@@ -62,7 +62,7 @@ public final class WebSecurityBundleTests {
     @Test
     public void testFiltersNotAppliedWhenDisabled() throws Exception {
         WebSecurityBundle bundle = new WebSecurityBundle();
-        WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
+        WebSecurityConfiguration webSecurityConfig = WebSecurityConfiguration.builder()
                 .cors(CorsConfiguration.DISABLED)
                 .build();
 
@@ -75,10 +75,10 @@ public final class WebSecurityBundleTests {
 
     @Test
     public void testYamlOverridesAppDefaults() throws Exception {
-        WebSecurityConfiguration appDefaultConfig = new WebSecurityConfiguration.Builder()
-                .cors(new CorsConfiguration.Builder().allowedOrigins("http://origin").build())
+        WebSecurityConfiguration appDefaultConfig = WebSecurityConfiguration.builder()
+                .cors(CorsConfiguration.builder().allowedOrigins("http://origin").build())
                 .build();
-        WebSecurityConfiguration yamlConfig = new WebSecurityConfiguration.Builder()
+        WebSecurityConfiguration yamlConfig = WebSecurityConfiguration.builder()
                 .cors(CorsConfiguration.DISABLED)
                 .build();
         WebSecurityBundle bundle = new WebSecurityBundle(appDefaultConfig);
@@ -93,8 +93,8 @@ public final class WebSecurityBundleTests {
     @Test
     @SuppressWarnings("unchecked")
     public void testDefaultPropertyMap() throws Exception {
-        WebSecurityConfiguration appDefaultConfig = new WebSecurityConfiguration.Builder()
-                .cors(new CorsConfiguration.Builder()
+        WebSecurityConfiguration appDefaultConfig = WebSecurityConfiguration.builder()
+                .cors(CorsConfiguration.builder()
                         .allowedOrigins("http://origin")
                         .build())
                 .build();
@@ -122,7 +122,7 @@ public final class WebSecurityBundleTests {
     @Test
     @SuppressWarnings("unchecked")
     public void testPropertyMapAddsAll() throws Exception {
-        CorsConfiguration config = new CorsConfiguration.Builder()
+        CorsConfiguration config = CorsConfiguration.builder()
                 .allowedOrigins("origins")
                 .allowedMethods("methods")
                 .allowedHeaders("headers")
@@ -130,7 +130,7 @@ public final class WebSecurityBundleTests {
                 .allowCredentials(true)
                 .exposedHeaders("exposed")
                 .build();
-        WebSecurityConfiguration appDefaultConfig = new WebSecurityConfiguration.Builder()
+        WebSecurityConfiguration appDefaultConfig = WebSecurityConfiguration.builder()
                 .cors(config)
                 .build();
         WebSecurityBundle bundle = new WebSecurityBundle(appDefaultConfig);
