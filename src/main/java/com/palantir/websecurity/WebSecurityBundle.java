@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.google.common.collect.ImmutableMap;
-import com.palantir.websecurity.filters.AppSecurityFilter;
+import com.palantir.websecurity.filters.WebSecurityFilter;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.server.AbstractServerFactory;
@@ -80,7 +80,7 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         this.derivedConfiguration = builder.build();
 
         applyCors(this.derivedConfiguration, environment);
-        applyAppSecurity(this.derivedConfiguration, environment, getJerseyRootPath(configuration));
+        applyWebSecurity(this.derivedConfiguration, environment, getJerseyRootPath(configuration));
     }
 
     /**
@@ -124,10 +124,10 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         return propertyBuilder.build();
     }
 
-    private static void applyAppSecurity(WebSecurityConfiguration derivedConfig, Environment env, String jerseyRoot) {
-        AppSecurityFilter filter = new AppSecurityFilter(derivedConfig, jerseyRoot);
+    private static void applyWebSecurity(WebSecurityConfiguration derivedConfig, Environment env, String jerseyRoot) {
+        WebSecurityFilter filter = new WebSecurityFilter(derivedConfig, jerseyRoot);
         env.servlets()
-                .addFilter("AppSecurityFilter", filter)
+                .addFilter("WebSecurityFilter", filter)
                 .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, ROOT_PATH);
     }
 

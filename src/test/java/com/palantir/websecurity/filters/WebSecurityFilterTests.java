@@ -18,9 +18,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
- * Tests for {@link AppSecurityFilter}.
+ * Tests for {@link WebSecurityFilter}.
  */
-public final class AppSecurityFilterTests {
+public final class WebSecurityFilterTests {
 
     private final WebSecurityConfiguration config = new WebSecurityConfiguration.Builder().build();
     private final MockHttpServletResponse response = new MockHttpServletResponse();
@@ -30,34 +30,34 @@ public final class AppSecurityFilterTests {
     public void testInjectInHttpServletRequests() throws IOException, ServletException {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/index.html");
 
-        AppSecurityFilter filter = new AppSecurityFilter(this.config, "/jersey/root/*");
+        WebSecurityFilter filter = new WebSecurityFilter(this.config, "/jersey/root/*");
         request.setPathInfo("/api");
 
         filter.doFilter(request, response, chain);
 
-        // only testing 1 header, since the AppSecurityHeaderInjector is tested separately
-        assertEquals(AppSecurityHeaderInjector.DEFAULT_FRAME_OPTIONS, response.getHeader(HttpHeaders.X_FRAME_OPTIONS));
+        // only testing 1 header, since the WebSecurityHeaderInjector is tested separately
+        assertEquals(WebSecurityHeaderInjector.DEFAULT_FRAME_OPTIONS, response.getHeader(HttpHeaders.X_FRAME_OPTIONS));
     }
 
     @Test
     public void testNotInjectForJerseyPathWithStar() throws IOException, ServletException {
-        AppSecurityFilter filter = new AppSecurityFilter(this.config, "/api/*");
+        WebSecurityFilter filter = new WebSecurityFilter(this.config, "/api/*");
         assertNotInjecting(filter);
     }
 
     @Test
     public void testNotInjectForJerseyPathNoStar() throws IOException, ServletException {
-        AppSecurityFilter filter = new AppSecurityFilter(this.config, "/api/");
+        WebSecurityFilter filter = new WebSecurityFilter(this.config, "/api/");
         assertNotInjecting(filter);
     }
 
     @Test
     public void testNotInjectForJerseyPathNoSlash() throws IOException, ServletException {
-        AppSecurityFilter filter = new AppSecurityFilter(this.config, "/api");
+        WebSecurityFilter filter = new WebSecurityFilter(this.config, "/api");
         assertNotInjecting(filter);
     }
 
-    private void assertNotInjecting(AppSecurityFilter filter) throws IOException, ServletException {
+    private void assertNotInjecting(WebSecurityFilter filter) throws IOException, ServletException {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/hello");
         // the servlet path is used to check if the request is for Jersey
         request.setServletPath("/api");

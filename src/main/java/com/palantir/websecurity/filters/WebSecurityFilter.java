@@ -18,18 +18,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * A filter that injects the App Security headers using a {@link AppSecurityHeaderInjector}.
+ * A filter that injects the App Security headers using a {@link WebSecurityHeaderInjector}.
  */
-public final class AppSecurityFilter implements Filter {
+public final class WebSecurityFilter implements Filter {
 
-    private final AppSecurityHeaderInjector injector;
+    private final WebSecurityHeaderInjector injector;
     private final String jerseyRoot;
 
-    public AppSecurityFilter(WebSecurityConfiguration config, String jerseyRoot) {
+    public WebSecurityFilter(WebSecurityConfiguration config, String jerseyRoot) {
         checkNotNull(config);
         checkNotNull(jerseyRoot);
 
-        this.injector = new AppSecurityHeaderInjector(config);
+        this.injector = new WebSecurityHeaderInjector(config);
         this.jerseyRoot = cleanJerseyRoot(jerseyRoot);
     }
 

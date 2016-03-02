@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * <li>XSS Protection</li>
  * </ul>
  */
-public final class AppSecurityHeaderInjector {
+public final class WebSecurityHeaderInjector {
 
     public static final String DEFAULT_CONTENT_SECURITY_POLICY = "default-src 'self'";
     public static final String DEFAULT_CONTENT_TYPE_OPTIONS = "nosniff";
@@ -36,7 +36,7 @@ public final class AppSecurityHeaderInjector {
     private final String frameOptions;
     private final String xssProtection;
 
-    public AppSecurityHeaderInjector(WebSecurityConfiguration config) {
+    public WebSecurityHeaderInjector(WebSecurityConfiguration config) {
         checkNotNull(config);
 
         this.contentSecurityPolicy = config.contentSecurityPolicy().or(DEFAULT_CONTENT_SECURITY_POLICY);
