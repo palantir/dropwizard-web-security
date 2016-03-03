@@ -2,13 +2,13 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity;
+package com.palantir.websecurity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.google.common.collect.ImmutableMap;
-import com.palantir.dropwizard.websecurity.filters.AppSecurityFilter;
+import com.palantir.websecurity.filters.AppSecurityFilter;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.server.AbstractServerFactory;

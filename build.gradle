@@ -40,7 +40,7 @@ dependencies {
     testCompile "org.springframework:spring-test:$springTestVersion"
 }
 
-group 'com.palantir.dropwizard.websecurity'
+group 'com.palantir.websecurity'
 version gitVersion()
 
 sourceCompatibility = 1.7

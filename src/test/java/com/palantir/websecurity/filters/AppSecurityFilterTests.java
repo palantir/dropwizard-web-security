@@ -2,14 +2,14 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity.filters;
+package com.palantir.websecurity.filters;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 import com.google.common.net.HttpHeaders;
-import com.palantir.dropwizard.websecurity.WebSecurityConfiguration;
+import com.palantir.websecurity.WebSecurityConfiguration;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

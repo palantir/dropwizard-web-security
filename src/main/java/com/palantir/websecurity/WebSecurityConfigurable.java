@@ -2,7 +2,7 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity;
+package com.palantir.websecurity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;

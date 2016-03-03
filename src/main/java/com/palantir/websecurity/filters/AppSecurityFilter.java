@@ -2,11 +2,11 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity.filters;
+package com.palantir.websecurity.filters;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.palantir.dropwizard.websecurity.WebSecurityConfiguration;
+import com.palantir.websecurity.WebSecurityConfiguration;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
