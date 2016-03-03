@@ -11,6 +11,21 @@ A bundle for applying default web security functionality to a dropwizard applica
 Usage
 -----
 1. Ensure your configuration implements `WebSecurityConfigurable`.
+
+    ```java
+    public static final class ExampleConfiguration extends Configuration implements WebSecurityConfigurable {
+
+        @JsonProperty("webSecurity")
+        @NotNull
+        @Valid
+        private final WebSecurityConfiguration webSecurity = WebSecurityConfiguration.DEFAULT;
+
+        public WebSecurityConfiguration getWebSecurityConfiguration() {
+            return this.webSecurity;
+        }
+    }
+    ```
+
 2. Add the bundle to your application:
 
 	```java
@@ -27,8 +42,8 @@ Usage
 
 Configuration
 -------------
-App Security headers are **added by default**. The following are the default values, only specify values in your
-configuration if they differ from the default values shown below.
+App Security headers are **added by default**. The following are the default values, **only specify values in your
+configuration if they differ from the default values shown below**.
 
 ```yaml
 webSecurity:
