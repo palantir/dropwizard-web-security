@@ -2,13 +2,13 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity.filters;
+package com.palantir.websecurity.filters;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import com.google.common.net.HttpHeaders;
-import com.palantir.dropwizard.websecurity.WebSecurityConfiguration;
+import com.palantir.websecurity.WebSecurityConfiguration;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;

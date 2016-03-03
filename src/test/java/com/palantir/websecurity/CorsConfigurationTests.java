@@ -2,7 +2,7 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.dropwizard.websecurity;
+package com.palantir.websecurity;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
