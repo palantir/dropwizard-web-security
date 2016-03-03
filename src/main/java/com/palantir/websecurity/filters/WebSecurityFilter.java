@@ -18,19 +18,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * A filter that injects the App Security headers using a {@link WebSecurityHeaderInjector}.
+ * A filter that injects the App Security headers using a {@link WebSecurityHeaderInjector} to every request.
  */
 public final class WebSecurityFilter implements Filter {
 
     private final WebSecurityHeaderInjector injector;
-    private final String jerseyRoot;
 
-    public WebSecurityFilter(WebSecurityConfiguration config, String jerseyRoot) {
+    public WebSecurityFilter(WebSecurityConfiguration config) {
         checkNotNull(config);
-        checkNotNull(jerseyRoot);
 
         this.injector = new WebSecurityHeaderInjector(config);
-        this.jerseyRoot = cleanJerseyRoot(jerseyRoot);
     }
 
     @Override
@@ -52,39 +49,9 @@ public final class WebSecurityFilter implements Filter {
         checkNotNull(chain);
 
         if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
-
-            if (!isJerseyRequest(httpRequest)) {
-                this.injector.injectHeaders(httpRequest, (HttpServletResponse) response);
-            }
+            this.injector.injectHeaders((HttpServletRequest) request, (HttpServletResponse) response);
         }
 
         chain.doFilter(request, response);
-    }
-
-    private boolean isJerseyRequest(HttpServletRequest request) {
-        String cleanedServletPath = cleanJerseyRoot(request.getServletPath().toLowerCase());
-        return this.jerseyRoot.equals(cleanedServletPath);
-    }
-
-    /**
-     * Cleans the Jersey root path to start with a slash and end without a star or slash.
-     */
-    private static String cleanJerseyRoot(String rawJerseyRoot) {
-        String cleaned = rawJerseyRoot;
-
-        if (cleaned.endsWith("*")) {
-            cleaned = cleaned.substring(0, cleaned.length() - 1);
-        }
-
-        if (cleaned.endsWith("/")) {
-            cleaned = cleaned.substring(0, cleaned.length() - 1);
-        }
-
-        if (!cleaned.startsWith("/")) {
-            cleaned = "/" + cleaned;
-        }
-
-        return cleaned;
     }
 }

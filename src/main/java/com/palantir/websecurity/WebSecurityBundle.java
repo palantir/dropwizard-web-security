@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.google.common.collect.ImmutableMap;
-import com.palantir.websecurity.filters.WebSecurityFilter;
+import com.palantir.websecurity.filters.JerseyAwareWebSecurityFilter;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.server.AbstractServerFactory;
@@ -121,9 +121,9 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
     }
 
     private static void applyWebSecurity(WebSecurityConfiguration derivedConfig, Environment env, String jerseyRoot) {
-        WebSecurityFilter filter = new WebSecurityFilter(derivedConfig, jerseyRoot);
+        JerseyAwareWebSecurityFilter filter = new JerseyAwareWebSecurityFilter(derivedConfig, jerseyRoot);
         env.servlets()
-                .addFilter("WebSecurityFilter", filter)
+                .addFilter("JerseyAwareWebSecurityFilter", filter)
                 .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, ROOT_PATH);
     }
 
