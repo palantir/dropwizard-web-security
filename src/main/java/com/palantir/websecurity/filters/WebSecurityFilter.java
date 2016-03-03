@@ -63,7 +63,8 @@ public final class WebSecurityFilter implements Filter {
     }
 
     private boolean isJerseyRequest(HttpServletRequest request) {
-        return this.jerseyRoot.equals(request.getServletPath().toLowerCase());
+        String cleanedServletPath = cleanJerseyRoot(request.getServletPath().toLowerCase());
+        return this.jerseyRoot.equals(cleanedServletPath);
     }
 
     /**
