@@ -1,6 +1,7 @@
 dropwizard-web-security
 =======================
 [![Circle CI](https://circleci.com/gh/palantir/dropwizard-web-security.svg?style=svg&circle-token=52b148126fda6cfba213cb832ff733d04d0d7277)](https://circleci.com/gh/palantir/dropwizard-web-security)
+[![Download](https://api.bintray.com/packages/palantir/releases/dropwizard-web-security/images/download.svg) ](https://bintray.com/palantir/releases/dropwizard-web-security/_latestVersion)
 
 A bundle for applying default web security functionality to a dropwizard application. It covers the following areas:
 
@@ -10,7 +11,19 @@ A bundle for applying default web security functionality to a dropwizard applica
 
 Usage
 -----
-1. Ensure your configuration implements `WebSecurityConfigurable`.
+1. Add the dependency to your project.
+
+    ```groovy
+    repository {
+        jcenter()
+    }
+
+    dependencies {
+        compile 'com.palantir.websecurity:dropwizard-web-security:<latest-version>'
+    }
+    ```
+
+2. Ensure your configuration implements `WebSecurityConfigurable`.
 
     ```java
     public static final class ExampleConfiguration extends Configuration implements WebSecurityConfigurable {
@@ -26,7 +39,7 @@ Usage
     }
     ```
 
-2. Add the bundle to your application:
+3. Add the bundle to your application.
 
 	```java
 	public class ExampleApplication extends Application<ExampleConfiguration> {
@@ -83,6 +96,8 @@ webSecurity:
 
 Advanced Usage
 --------------
+
+### App-Specific Settings
 You can customize your application's defaults by defining it inside of your Dropwizard application. Any value not set
 will be set to the default values.
 
@@ -112,6 +127,14 @@ public static final class ExampleApplication extends Application<ExampleConfigur
         bootstrap.addBundle(webSecurityBundle);
     }
 }
+```
+
+
+### Using the Derived Configuration
+You can also get the derived configuration to create a matching `WebSecurityHeaderInjector`:
+
+```java
+WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(webSecurityBundle.getDerivedConfiguration());
 ```
 
 
