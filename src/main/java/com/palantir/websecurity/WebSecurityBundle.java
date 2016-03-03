@@ -70,14 +70,10 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
         checkNotNull(configuration);
         checkNotNull(environment);
 
-        WebSecurityConfiguration.Builder builder = WebSecurityConfiguration.builder();
-        builder.from(applicationDefaults);
-
-        if (configuration.getWebSecurityConfiguration().isPresent()) {
-            builder.from(configuration.getWebSecurityConfiguration().get());
-        }
-
-        this.derivedConfiguration = builder.build();
+        this.derivedConfiguration = WebSecurityConfiguration.builder()
+                .from(applicationDefaults)
+                .from(configuration.getWebSecurityConfiguration())
+                .build();
 
         applyCors(this.derivedConfiguration, environment);
         applyWebSecurity(this.derivedConfiguration, environment, getJerseyRootPath(configuration));

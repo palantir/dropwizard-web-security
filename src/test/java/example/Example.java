@@ -4,9 +4,7 @@
 
 package example;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Optional;
 import com.palantir.websecurity.CorsConfiguration;
 import com.palantir.websecurity.WebSecurityBundle;
 import com.palantir.websecurity.WebSecurityConfigurable;
@@ -16,6 +14,8 @@ import io.dropwizard.Configuration;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -48,18 +48,13 @@ public final class Example {
 
     public static final class ExampleConfiguration extends Configuration implements WebSecurityConfigurable {
 
-        private final Optional<WebSecurityConfiguration> webSecurityConfiguration;
+        @JsonProperty("webSecurity")
+        @NotNull
+        @Valid
+        private final WebSecurityConfiguration webSecurity = WebSecurityConfiguration.DEFAULT;
 
-        @JsonCreator
-        public ExampleConfiguration(
-                @JsonProperty("webSecurity") Optional<WebSecurityConfiguration> webSecurityConfigurationOptional) {
-
-            this.webSecurityConfiguration = webSecurityConfigurationOptional;
-        }
-
-        @Override
-        public Optional<WebSecurityConfiguration> getWebSecurityConfiguration() {
-            return this.webSecurityConfiguration;
+        public WebSecurityConfiguration getWebSecurityConfiguration() {
+            return this.webSecurity;
         }
     }
 
@@ -76,6 +71,7 @@ public final class Example {
                 .cors(CorsConfiguration.builder()
                         .preflightMaxAge(60 * 10)
                         .build())
+
                 .build();
 
         private final WebSecurityBundle webSecurityBundle = new WebSecurityBundle(webSecurityDefaults);
