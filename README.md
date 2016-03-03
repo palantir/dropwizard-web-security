@@ -1,6 +1,6 @@
 dropwizard-web-security
 =======================
-[![Circle CI](https://circleci.com/gh/palantir/dropwizard-web-security.svg?style=svg&circle-token=52b148126fda6cfba213cb832ff733d04d0d7277)](https://circleci.com/gh/palantir/dropwizard-web-security)
+[![Circle CI](https://circleci.com/gh/palantir/dropwizard-web-security.svg?style=shield&circle-token=52b148126fda6cfba213cb832ff733d04d0d7277)](https://circleci.com/gh/palantir/dropwizard-web-security)
 [![Download](https://api.bintray.com/packages/palantir/releases/dropwizard-web-security/images/download.svg) ](https://bintray.com/palantir/releases/dropwizard-web-security/_latestVersion)
 
 A bundle for applying default web security functionality to a dropwizard application. It covers the following areas:
