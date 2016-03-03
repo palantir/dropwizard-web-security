@@ -127,14 +127,35 @@ public abstract class CorsConfiguration {
     /**
      * Provides a configuration with default values.
      */
-    public static final CorsConfiguration DEFAULT = new CorsConfiguration.Builder().build();
+    public static final CorsConfiguration DEFAULT = CorsConfiguration.builder().build();
 
     /**
      * Provides a configuration that is disabled.
      */
-    public static final CorsConfiguration DISABLED = new CorsConfiguration.Builder()
+    public static final CorsConfiguration DISABLED = CorsConfiguration.builder()
             .allowedOrigins(DISABLED_ORIGINS)
             .build();
 
-    public static class Builder extends ImmutableCorsConfiguration.Builder {}
+    // hides implementation details
+    public static Builder builder() {
+        return ImmutableCorsConfiguration.builder();
+    }
+
+    // hides implementation details
+    public interface Builder {
+
+        Builder allowCredentials(boolean allowCredentials);
+
+        Builder allowedHeaders(String allowedHeaders);
+
+        Builder allowedMethods(String allowedMethods);
+
+        Builder allowedOrigins(String allowedOrigins);
+
+        Builder exposedHeaders(String exposedHeaders);
+
+        Builder preflightMaxAge(long preflightMaxAge);
+
+        CorsConfiguration build();
+    }
 }

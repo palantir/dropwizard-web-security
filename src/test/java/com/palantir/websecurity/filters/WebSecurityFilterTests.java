@@ -22,7 +22,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
  */
 public final class WebSecurityFilterTests {
 
-    private final WebSecurityConfiguration config = new WebSecurityConfiguration.Builder().build();
+    private static final WebSecurityConfiguration DEFAULT_CONFIG = WebSecurityConfiguration.DEFAULT;
+
     private final MockHttpServletResponse response = new MockHttpServletResponse();
     private final FilterChain chain = mock(FilterChain.class);
 
@@ -30,7 +31,7 @@ public final class WebSecurityFilterTests {
     public void testInjectInHttpServletRequests() throws IOException, ServletException {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/index.html");
 
-        WebSecurityFilter filter = new WebSecurityFilter(this.config, "/jersey/root/*");
+        WebSecurityFilter filter = new WebSecurityFilter(DEFAULT_CONFIG, "/jersey/root/*");
         request.setPathInfo("/api");
 
         filter.doFilter(request, response, chain);
@@ -41,19 +42,19 @@ public final class WebSecurityFilterTests {
 
     @Test
     public void testNotInjectForJerseyPathWithStar() throws IOException, ServletException {
-        WebSecurityFilter filter = new WebSecurityFilter(this.config, "/api/*");
+        WebSecurityFilter filter = new WebSecurityFilter(DEFAULT_CONFIG, "/api/*");
         assertNotInjecting(filter);
     }
 
     @Test
     public void testNotInjectForJerseyPathNoStar() throws IOException, ServletException {
-        WebSecurityFilter filter = new WebSecurityFilter(this.config, "/api/");
+        WebSecurityFilter filter = new WebSecurityFilter(DEFAULT_CONFIG, "/api/");
         assertNotInjecting(filter);
     }
 
     @Test
     public void testNotInjectForJerseyPathNoSlash() throws IOException, ServletException {
-        WebSecurityFilter filter = new WebSecurityFilter(this.config, "/api");
+        WebSecurityFilter filter = new WebSecurityFilter(DEFAULT_CONFIG, "/api");
         assertNotInjecting(filter);
     }
 
