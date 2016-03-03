@@ -8,6 +8,10 @@ general:
   artifacts:
     - build/libs
 
+dependencies:
+  override:
+    - ./gradlew assemble compileTestJava
+
 test:
   override:
     - ./gradlew build
