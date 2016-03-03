@@ -2,10 +2,9 @@
  * Copyright 2016 Palantir Technologies, Inc. All rights reserved.
  */
 
-package example;
+package com.palantir.websecurity.examples;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 
 import com.google.common.net.HttpHeaders;
@@ -17,14 +16,17 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-public final class ExampleTests {
+/**
+ * Tests for {@link Example.ExampleRestApplication}.
+ */
+public final class ExampleRestTests {
 
     public static final String ORIGIN_VALUE = "http://origin.com";
 
     @ClassRule
     public static final DropwizardAppRule<Example.ExampleConfiguration> RULE = new DropwizardAppRule<>(
-            Example.ExampleApplication.class,
-            Example.ExampleApplication.class.getClassLoader().getResource("example.yml").getPath());
+            Example.ExampleRestApplication.class,
+            Example.ExampleRestApplication.class.getClassLoader().getResource("example-rest.yml").getPath());
 
     private static Client client;
 
@@ -36,7 +38,7 @@ public final class ExampleTests {
     @Test
     public void testCorsHeadersAppliedToApi() {
         Response response = client
-                .target(String.format("http://localhost:%d/example-context/api/hello", RULE.getLocalPort())).request()
+                .target(String.format("http://localhost:%d/example-context/hello", RULE.getLocalPort())).request()
                 .header(HttpHeaders.ORIGIN, ORIGIN_VALUE)
                 .get();
 
@@ -49,23 +51,9 @@ public final class ExampleTests {
     }
 
     @Test
-    public void testCorsHeadersAppliedToWeb() {
-        Response response = client
-                .target(String.format("http://localhost:%d/example-context/index.html", RULE.getLocalPort())).request()
-                .header(HttpHeaders.ORIGIN, ORIGIN_VALUE)
-                .get();
-
-        // check basic functionality
-        assertEquals(200, response.getStatus());
-
-        // check for a YAML defined CORS entry
-        assertEquals(ORIGIN_VALUE, response.getHeaderString(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN));
-    }
-
-    @Test
     public void testWebSecurityHeadersNotAppliedToApi() {
         Response response = client
-                .target(String.format("http://localhost:%d/example-context/api/hello", RULE.getLocalPort())).request()
+                .target(String.format("http://localhost:%d/example-context/hello", RULE.getLocalPort())).request()
                 .get();
 
         // check basic functionality
@@ -74,24 +62,6 @@ public final class ExampleTests {
         // check that no web security headers are on the response
         assertNull(response.getHeaderString(HttpHeaders.CONTENT_SECURITY_POLICY));
         assertNull(response.getHeaderString(HttpHeaders.X_CONTENT_TYPE_OPTIONS));
-        assertNull(response.getHeaderString(HttpHeaders.X_FRAME_OPTIONS));
-    }
-
-    @Test
-    public void testWebSecurityHeadersAppliedToWeb() {
-        Response response = client
-                .target(String.format("http://localhost:%d/example-context/index.html", RULE.getLocalPort())).request()
-                .get();
-
-        // check basic functionality
-        assertEquals(200, response.getStatus());
-
-        // test for application default settings
-        assertEquals(Example.CSP_FROM_APP, response.getHeaderString(HttpHeaders.CONTENT_SECURITY_POLICY));
-        assertNotEquals(Example.CTO_FROM_APP, response.getHeaderString(HttpHeaders.X_CONTENT_TYPE_OPTIONS));
-
-        // check for YAML defined settings
-        assertEquals(Example.CTO_FROM_YML, response.getHeaderString(HttpHeaders.X_CONTENT_TYPE_OPTIONS));
         assertNull(response.getHeaderString(HttpHeaders.X_FRAME_OPTIONS));
     }
 }

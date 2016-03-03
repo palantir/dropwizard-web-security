@@ -120,11 +120,11 @@ public static final class ExampleApplication extends Application<ExampleConfigur
 
             .build();
 
-    private final WebSecurityBundle webSecurityBundle = new WebSecurityBundle(webSecurityDefaults);
+    private final WebSecurityBundle webSecurityBundle = new WebSecurityBundle(this.webSecurityDefaults);
 
     @Override
     public void initialize(Bootstrap<ExampleConfiguration> bootstrap) {
-        bootstrap.addBundle(webSecurityBundle);
+        bootstrap.addBundle(this.webSecurityBundle);
     }
 }
 ```
