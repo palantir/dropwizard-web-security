@@ -35,8 +35,7 @@ dependencies {
     testCompile "io.dropwizard:dropwizard-client:$dropwizardVersion"
     testCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
     testCompile "junit:junit:$junitVersion"
-    testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
-    testCompile "org.mockito:mockito-all:$mockitoVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
     testCompile "org.springframework:spring-test:$springTestVersion"
 }
 
