@@ -35,6 +35,9 @@ bintray {
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/palantir/dropwizard-web-security.git'
         publications = ['bintray']
+
+        githubRepo = 'palantir/dropwizard-web-security'
+        githubReleaseNotesFile = 'README.md'
     }
 }
 
