@@ -1,0 +1,12 @@
+apply from: "$rootDir/gradle/java.gradle"
+apply from: "${rootDir}/gradle/publish.gradle"
+
+dependencies {
+    compile project(':web-security')
+
+    compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.springframework:spring-test:$springTestVersion"
+}

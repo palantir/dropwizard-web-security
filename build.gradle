@@ -1,45 +1,30 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
 
     dependencies {
-        classpath "com.palantir:gradle-baseline-java:${baselineVersion}"
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:${bintrayVersion}"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayVersion"
+        classpath "com.netflix.nebula:gradle-info-plugin:$nebulaInfoVersion"
+        classpath "com.netflix.nebula:nebula-publishing-plugin:$nebulaPublishingVersion"
+        classpath "com.palantir:gradle-baseline-java:$baselineVersion"
+        classpath "com.palantir:jacoco-coverage:$jacocoCoverageVersion"
+        classpath "gradle.plugin.com.palantir.gradle.gitversion:gradle-git-version:$gitVersionVersion"
+        classpath "gradle.plugin.org.inferred:gradle-processors:$processorsVersion"
     }
 }
 
-plugins {
-    id 'org.inferred.processors' version '1.1.5'
-    id 'com.palantir.git-version' version '0.4.0'
-}
-
-apply plugin: 'java'
 apply plugin: 'com.palantir.baseline-config'
 apply plugin: 'com.palantir.baseline-idea'
-apply plugin: 'com.palantir.baseline-eclipse'
-apply plugin: 'com.palantir.baseline-checkstyle'
-apply plugin: 'com.palantir.baseline-findbugs'
-apply from: "${rootDir}/gradle/publish.gradle"
+apply plugin: 'com.palantir.git-version'
+apply plugin: 'org.inferred.processors'
 
-repositories {
-    jcenter()
+allprojects {
+    group 'com.palantir.websecurity'
+    version gitVersion()
+
+    repositories {
+        jcenter()
+    }
 }
-
-dependencies {
-    compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
-
-    processor "org.immutables:value:$immutablesVersion"
-
-    testCompile "io.dropwizard:dropwizard-assets:$dropwizardVersion"
-    testCompile "io.dropwizard:dropwizard-client:$dropwizardVersion"
-    testCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.mockito:mockito-core:$mockitoVersion"
-    testCompile "org.springframework:spring-test:$springTestVersion"
-}
-
-group 'com.palantir.websecurity'
-version gitVersion()
-
-sourceCompatibility = 1.7

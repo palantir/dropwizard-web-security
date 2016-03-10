@@ -5,4 +5,4 @@ set -o pipefail
 
 cd "$(dirname "$0")"/..
 
-./gradlew build --parallel
+./gradlew build

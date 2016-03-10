@@ -138,6 +138,16 @@ WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(webSecurityBu
 ```
 
 
+### Using Outside of Dropwizard
+You can use the individual filters outside of a Dropwizard Application by depending on:
+
+```groovy
+dependencies {
+    compile 'com.palantir.websecurity:web-security:<latest-version>'
+}
+```
+
+
 Contributing
 ------------
 Before working on the code, if you plan to contribute changes, please read the [CONTRIBUTING](CONTRIBUTING.md) document.
