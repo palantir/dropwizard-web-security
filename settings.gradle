@@ -1,1 +1,5 @@
 rootProject.name = 'dropwizard-web-security'
+
+include 'dropwizard-web-security'
+include 'example'
+include 'web-security'

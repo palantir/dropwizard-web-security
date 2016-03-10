@@ -1,0 +1,17 @@
+apply from: "$rootDir/gradle/java.gradle"
+apply from: "${rootDir}/gradle/publish.gradle"
+apply plugin: 'org.inferred.processors'
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
+    compile "com.google.guava:guava:$guavaVersion"
+    compile "io.dropwizard:dropwizard-validation:$dropwizardVersion"
+    compile "javax.servlet:javax.servlet-api:$servletApiVersion"
+    compile "org.eclipse.jetty:jetty-servlets:$servletVersion"
+
+    processor "org.immutables:value:$immutablesVersion"
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.springframework:spring-test:$springTestVersion"
+}

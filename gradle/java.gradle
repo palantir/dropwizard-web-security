@@ -1,0 +1,8 @@
+apply plugin: 'java'
+apply plugin: 'com.palantir.baseline-checkstyle'
+apply plugin: 'com.palantir.baseline-eclipse'
+apply plugin: 'com.palantir.baseline-findbugs'
+apply plugin: 'com.palantir.baseline-idea'
+apply plugin: 'com.palantir.jacoco-coverage'
+
+sourceCompatibility = '1.7'

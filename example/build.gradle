@@ -1,0 +1,13 @@
+apply from: "$rootDir/gradle/java.gradle"
+
+dependencies {
+    compile project(':dropwizard-web-security')
+
+    compile "io.dropwizard:dropwizard-assets:$dropwizardVersion"
+
+    testCompile "io.dropwizard:dropwizard-client:$dropwizardVersion"
+    testCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.springframework:spring-test:$springTestVersion"
+}

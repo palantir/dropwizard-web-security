@@ -1,0 +1,12 @@
+server:
+  applicationContextPath: /example-context
+
+  applicationConnectors:
+    - type: http
+      port: 0
+
+webSecurity:
+  contentTypeOptions: "cto is overridden yay!"
+  frameOptions: ""
+  cors:
+    allowedOrigins: "*"
