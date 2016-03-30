@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public final class WebSecurityHeaderInjector {
 
-    public static final String DEFAULT_CONTENT_SECURITY_POLICY = "default-src 'self'";
+    public static final String DEFAULT_CONTENT_SECURITY_POLICY = "default-src 'self'; style-src 'self' 'unsafe-inline'";
     public static final String DEFAULT_CONTENT_TYPE_OPTIONS = "nosniff";
     public static final String DEFAULT_FRAME_OPTIONS = "sameorigin";
     public static final String DEFAULT_XSS_PROTECTION = "1; mode=block";
