@@ -6,13 +6,13 @@ package com.palantir.websecurity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Optional;
-import org.immutables.value.Value;
+import org.immutables.value.Value.Immutable;
 
 /**
  * Root-level Configuration for the {@link WebSecurityBundle}.
  */
-@Value.Immutable
-@Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
+@Immutable
+@ImmutableStyles
 @JsonDeserialize(as = ImmutableWebSecurityConfiguration.class)
 public abstract class WebSecurityConfiguration {
 
