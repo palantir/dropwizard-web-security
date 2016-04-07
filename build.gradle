@@ -29,6 +29,8 @@ repositories {
 dependencies {
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
 
+    compileOnly "org.immutables:value:$immutablesVersion:annotations"
+
     processor "org.immutables:value:$immutablesVersion"
 
     testCompile "io.dropwizard:dropwizard-assets:$dropwizardVersion"

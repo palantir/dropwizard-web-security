@@ -15,13 +15,14 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.immutables.value.Value;
+import org.immutables.value.Value.Style;
 
 /**
  * Configuration class used to set the properties for a {@link CrossOriginFilter}. If a value is not set it will not be
  * passed in as an initial parameter.
  */
 @Value.Immutable
-@ImmutableStyles
+@Value.Style(visibility = Style.ImplementationVisibility.PACKAGE)
 @JsonDeserialize(as = ImmutableCorsConfiguration.class)
 @SuppressWarnings("checkstyle:designforextension")
 public abstract class CorsConfiguration {
