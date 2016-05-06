@@ -4,7 +4,6 @@
 
 package com.palantir.websecurity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Optional;
 import org.immutables.value.Value.Immutable;
 
@@ -12,9 +11,7 @@ import org.immutables.value.Value.Immutable;
  * Root-level Configuration for the {@link WebSecurityBundle}.
  */
 @Immutable
-@ImmutableStyles
-@JsonDeserialize(as = ImmutableWebSecurityConfiguration.class)
-public abstract class WebSecurityConfiguration {
+abstract class AbstractWebSecurityConfiguration {
 
     public static final String TURN_OFF = "";
 
@@ -42,32 +39,4 @@ public abstract class WebSecurityConfiguration {
      * Configuration for CORS functionality.
      */
     public abstract Optional<CorsConfiguration> cors();
-
-    /**
-     * Provides a configuration with default values.
-     */
-    public static final WebSecurityConfiguration DEFAULT = WebSecurityConfiguration.builder().build();
-
-    // hides implementation details
-    public static Builder builder() {
-        return ImmutableWebSecurityConfiguration.builder();
-    }
-
-    // hides implementation details
-    public interface Builder {
-
-        Builder contentSecurityPolicy(String contentSecurityPolicy);
-
-        Builder contentTypeOptions(String contentTypeOptions);
-
-        Builder frameOptions(String frameOptions);
-
-        Builder xssProtection(String xssProtection);
-
-        Builder cors(CorsConfiguration corsConfiguration);
-
-        Builder from(WebSecurityConfiguration otherConfig);
-
-        WebSecurityConfiguration build();
-    }
 }

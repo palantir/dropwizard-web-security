@@ -22,7 +22,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  */
 public final class JerseyAwareWebSecurityFilterTests {
 
-    private static final WebSecurityConfiguration DEFAULT_CONFIG = WebSecurityConfiguration.DEFAULT;
+    private static final WebSecurityConfiguration DEFAULT_CONFIG = WebSecurityConfiguration.builder().build();
 
     private final MockHttpServletResponse response = new MockHttpServletResponse();
     private final FilterChain chain = mock(FilterChain.class);

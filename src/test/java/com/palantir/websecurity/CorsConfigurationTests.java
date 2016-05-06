@@ -4,7 +4,6 @@
 
 package com.palantir.websecurity;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.google.common.collect.Iterables;
@@ -21,11 +20,6 @@ import org.junit.Test;
 public final class CorsConfigurationTests {
 
     private static final Validator VALIDATOR = BaseValidator.newValidator();
-
-    @Test
-    public void testDisabled() {
-        assertFalse(CorsConfiguration.DISABLED.enabled());
-    }
 
     @Test
     public void testAllowedOrigins_allowStar() {

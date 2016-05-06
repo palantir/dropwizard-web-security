@@ -4,6 +4,7 @@
 
 package com.palantir.websecurity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import org.immutables.value.Value.Style;
@@ -13,7 +14,9 @@ import org.immutables.value.Value.Style;
  */
 
 @Target({ElementType.PACKAGE, ElementType.TYPE})
+@JsonSerialize
 @Style(
-        visibility = Style.ImplementationVisibility.PACKAGE
+        typeImmutable = "*",
+        visibility = Style.ImplementationVisibility.PUBLIC
 )
 @interface ImmutableStyles {}
