@@ -64,4 +64,14 @@ public final class ExampleRestTests {
         assertNull(response.getHeaderString(HttpHeaders.X_CONTENT_TYPE_OPTIONS));
         assertNull(response.getHeaderString(HttpHeaders.X_FRAME_OPTIONS));
     }
+
+    @Test
+    public void testStrictTransportSecurityDisabled() {
+        Response response = client
+                .target(String.format("http://localhost:%d/example-context/hello", RULE.getLocalPort())).request()
+                .get();
+
+        assertEquals(200, response.getStatus());
+        assertNull(response.getHeaderString(HttpHeaders.STRICT_TRANSPORT_SECURITY));
+    }
 }

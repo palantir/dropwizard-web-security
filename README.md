@@ -6,7 +6,7 @@ dropwizard-web-security
 A bundle for applying default web security functionality to a dropwizard application. It covers the following areas:
 
 - [Cross-Origin Resource Sharing (CORS)][cors1] [\[2\]][cors2] [\[3\]][cors3]
-- Web Application Security Headers ([Content Security Policy][csp], etc.)
+- Web Application Security Headers ([Content Security Policy][csp], [Strict Transport Security][hsts] etc.)
 
 
 Usage
@@ -60,6 +60,7 @@ configuration if they differ from the default values shown below**.
 
 ```yaml
 webSecurity:
+  strictTransportSecurity: "max-age=31536000"                                       # Strict-Transport-Security
   contentSecurityPolicy: "default-src 'self'; style-src 'self' 'unsafe-inline'"     # Content-Security-Policy and X-Content-Security-Policy
   contentTypeOptions: "nosniff"                                                     # X-Content-Type-Options
   frameOptions: "sameorigin"                                                        # X-Frame-Options
@@ -152,6 +153,7 @@ This project is made available under the [Apache 2.0 License][license].
 [cors2]: https://www.owasp.org/index.php/CORS_OriginHeaderScrutiny
 [cors3]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
 [csp]: https://developer.mozilla.org/en-US/docs/Web/Security/CSP
+[hsts]: https://tools.ietf.org/html/rfc6797
 
 [corsfilter]: https://github.com/eclipse/jetty.project/blob/jetty-9.2.13.v20150730/jetty-servlets/src/main/java/org/eclipse/jetty/servlets/CrossOriginFilter.java
 
