@@ -97,4 +97,14 @@ public final class ExampleWebTests {
         assertEquals(Example.CTO_FROM_YML, response.getHeaderString(HttpHeaders.X_CONTENT_TYPE_OPTIONS));
         assertNull(response.getHeaderString(HttpHeaders.X_FRAME_OPTIONS));
     }
+
+    @Test
+    public void testStrictTransportSecurityDefault() {
+        Response response = client
+                .target(String.format("http://localhost:%d/example-context/index.html", RULE.getLocalPort())).request()
+                .get();
+
+        assertEquals(200, response.getStatus());
+        assertEquals("max-age=31536000", response.getHeaderString(HttpHeaders.STRICT_TRANSPORT_SECURITY));
+    }
 }

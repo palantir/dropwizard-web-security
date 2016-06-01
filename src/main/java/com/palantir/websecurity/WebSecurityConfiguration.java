@@ -19,6 +19,11 @@ public abstract class WebSecurityConfiguration {
     public static final String TURN_OFF = "";
 
     /**
+     * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#STRICT_TRANSPORT_SECURITY}.
+     */
+    public abstract Optional<String> strictTransportSecurity();
+
+    /**
      * Value to be returned in the response header {@link com.google.common.net.HttpHeaders#CONTENT_SECURITY_POLICY}.
      */
     public abstract Optional<String> contentSecurityPolicy();

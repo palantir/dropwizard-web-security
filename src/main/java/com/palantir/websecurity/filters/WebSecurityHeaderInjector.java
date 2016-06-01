@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public final class WebSecurityHeaderInjector {
 
+    public static final String DEFAULT_STRICT_TRANSPORT_SECURITY = "max-age=31536000";
     public static final String DEFAULT_CONTENT_SECURITY_POLICY = "default-src 'self'; style-src 'self' 'unsafe-inline'";
     public static final String DEFAULT_CONTENT_TYPE_OPTIONS = "nosniff";
     public static final String DEFAULT_FRAME_OPTIONS = "sameorigin";
@@ -31,6 +32,7 @@ public final class WebSecurityHeaderInjector {
     public static final String USER_AGENT_IE_10 = "MSIE 10";
     public static final String USER_AGENT_IE_11 = "rv:11.0";
 
+    private final String strictTransportSecurity;
     private final String contentSecurityPolicy;
     private final String contentTypeOptions;
     private final String frameOptions;
@@ -39,6 +41,7 @@ public final class WebSecurityHeaderInjector {
     public WebSecurityHeaderInjector(WebSecurityConfiguration config) {
         checkNotNull(config);
 
+        this.strictTransportSecurity = config.strictTransportSecurity().or(DEFAULT_STRICT_TRANSPORT_SECURITY);
         this.contentSecurityPolicy = config.contentSecurityPolicy().or(DEFAULT_CONTENT_SECURITY_POLICY);
         this.contentTypeOptions = config.contentTypeOptions().or(DEFAULT_CONTENT_TYPE_OPTIONS);
         this.frameOptions = config.frameOptions().or(DEFAULT_FRAME_OPTIONS);
@@ -48,6 +51,10 @@ public final class WebSecurityHeaderInjector {
     public void injectHeaders(HttpServletRequest request, HttpServletResponse response) {
         checkNotNull(request);
         checkNotNull(response);
+
+        if (!this.strictTransportSecurity.isEmpty()) {
+            response.setHeader(HttpHeaders.STRICT_TRANSPORT_SECURITY, this.strictTransportSecurity);
+        }
 
         if (!this.contentSecurityPolicy.isEmpty()) {
             response.setHeader(HttpHeaders.CONTENT_SECURITY_POLICY, this.contentSecurityPolicy);

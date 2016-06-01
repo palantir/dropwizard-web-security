@@ -6,6 +6,7 @@ server:
       port: 0
 
 webSecurity:
+  strictTransportSecurity: ""
   contentTypeOptions: "cto is overridden yay!"
   frameOptions: ""
 
