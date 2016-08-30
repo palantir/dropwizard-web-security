@@ -42,4 +42,4 @@ dependencies {
 group 'com.palantir.websecurity'
 version gitVersion()
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8

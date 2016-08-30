@@ -16,6 +16,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -138,7 +139,10 @@ public final class WebSecurityBundle implements ConfiguredBundle<WebSecurityConf
             Configuration dwConfig = (Configuration) configuration;
             if (dwConfig.getServerFactory() instanceof AbstractServerFactory) {
                 AbstractServerFactory abstractServerFactory = (AbstractServerFactory) dwConfig.getServerFactory();
-                rootPath = abstractServerFactory.getJerseyRootPath();
+                Optional<String> optionalRootPath = abstractServerFactory.getJerseyRootPath();
+                if (optionalRootPath.isPresent()) {
+                    rootPath = optionalRootPath.get();
+                }
             }
         }
 
