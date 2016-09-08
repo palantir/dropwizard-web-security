@@ -60,7 +60,7 @@ configuration if they differ from the default values shown below**.
 
 ```yaml
 webSecurity:
-  contentSecurityPolicy: "default-src 'self'; style-src 'self' 'unsafe-inline'"     # Content-Security-Policy and X-Content-Security-Policy
+  contentSecurityPolicy: "default-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'self';"     # CSP
   contentTypeOptions: "nosniff"                                                     # X-Content-Type-Options
   frameOptions: "sameorigin"                                                        # X-Frame-Options
   xssProtection: "1; mode=block"                                                    # X-XSS-Protection
