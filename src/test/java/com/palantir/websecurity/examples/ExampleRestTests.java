@@ -12,6 +12,7 @@ import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Response;
+import org.glassfish.jersey.client.ClientProperties;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -32,7 +33,10 @@ public final class ExampleRestTests {
 
     @BeforeClass
     public static void beforeClass() {
-        client = new JerseyClientBuilder(RULE.getEnvironment()).build("tests");
+        client = new JerseyClientBuilder(RULE.getEnvironment())
+                .withProperty(ClientProperties.CONNECT_TIMEOUT, 1000)
+                .withProperty(ClientProperties.READ_TIMEOUT, 1000)
+                .build("tests");
     }
 
     @Test

@@ -21,7 +21,7 @@ import org.immutables.value.Value;
  * passed in as an initial parameter.
  */
 @Value.Immutable
-@Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
+@ImmutableStyles
 @JsonDeserialize(as = ImmutableCorsConfiguration.class)
 @SuppressWarnings("checkstyle:designforextension")
 public abstract class CorsConfiguration {

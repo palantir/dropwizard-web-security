@@ -1,6 +1,6 @@
 machine:
   java:
-    version: openjdk7
+    version: openjdk8
   environment:
     TERM: dumb
 
@@ -14,7 +14,7 @@ dependencies:
 
 test:
   override:
-    - ./gradlew build
+    - ./scripts/verify.sh
 
 deployment:
   release:
