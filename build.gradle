@@ -39,6 +39,10 @@ dependencies {
     testCompile "org.springframework:spring-test:$springTestVersion"
 }
 
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
 group 'com.palantir.websecurity'
 version gitVersion()
 
