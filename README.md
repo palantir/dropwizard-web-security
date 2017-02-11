@@ -71,7 +71,8 @@ webSecurity:
 
 CORS Configuration
 ------------------
-CORS is **disabled by default**. To enable CORS, set the `allowedOrigins` method to a non-empty string.
+CORS is **disabled by default**. To enable CORS, set the `allowedOrigins` method to a non-empty string. When enabled,
+the values are passed through to the [`CrossOriginFilter`][corsfilter] as `init` parameters.
 
 The following are the default values, only specify values if they differ from the default values shown below.
 
@@ -86,12 +87,15 @@ webSecurity:
     preflightMaxAge: 1800
 ```
 
-**NOTE:** The values shown are from [`CrossOriginFilter`][corsfilter], except the following:
+The `allowedOrigins` field can have the following values (see the [javadoc][corsfilter-javadoc] for details):
 
-- `allowedOrigins` - set to blank instead of `"*"` to require the user to enter the allowed origins
-- `allowCredentials` - set to false by default since credentials should be passed via the `Authorization` header
-- `allowedHeaders` - set to include the default set of headers and the `Authorization` header
-- `allowedMethods` - set to include a default set of commonly used methods
+- Empty String - `""` - will result in CORS being disabled
+- Any Origin - `*` - will enabled CORS and allow all origins
+- Comma Separated List - will enable CORS, allowing the origins in the list. If an entry in the list contains a `*` it
+  will be treated as a regular expression, else it must be a valid URL.
+
+**NOTE:** The default values above are designed to work well with credentials being passed via the `Authorization`
+header.
 
 
 Advanced Usage
@@ -154,5 +158,6 @@ This project is made available under the [Apache 2.0 License][license].
 [csp]: https://developer.mozilla.org/en-US/docs/Web/Security/CSP
 
 [corsfilter]: https://github.com/eclipse/jetty.project/blob/jetty-9.2.13.v20150730/jetty-servlets/src/main/java/org/eclipse/jetty/servlets/CrossOriginFilter.java
+[corsfilter-javadoc]: https://github.com/eclipse/jetty.project/blob/jetty-9.2.13.v20150730/jetty-servlets/src/main/java/org/eclipse/jetty/servlets/CrossOriginFilter.java#L50-L59
 
 [license]: http://www.apache.org/licenses/LICENSE-2.0
