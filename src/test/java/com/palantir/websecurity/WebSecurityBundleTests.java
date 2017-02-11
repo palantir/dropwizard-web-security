@@ -28,6 +28,10 @@ import org.mockito.ArgumentCaptor;
  */
 public final class WebSecurityBundleTests {
 
+    private static final CorsConfiguration DISABLED = CorsConfiguration.builder()
+            .allowedOrigins("")
+            .build();
+
     private final WebSecurityConfigurable appConfig = mock(WebSecurityConfigurable.class);
     private final FilterRegistration.Dynamic dynamic = mock(FilterRegistration.Dynamic.class);
     private final Environment environment = mock(Environment.class, RETURNS_DEEP_STUBS);
@@ -35,7 +39,7 @@ public final class WebSecurityBundleTests {
     @Test
     public void testDefaultFiltersApplied() throws Exception {
         WebSecurityBundle bundle = new WebSecurityBundle();
-        WebSecurityConfiguration webSecurityConfig = WebSecurityConfiguration.DEFAULT;
+        WebSecurityConfiguration webSecurityConfig = WebSecurityConfiguration.builder().build();
 
         when(this.appConfig.getWebSecurityConfiguration()).thenReturn(webSecurityConfig);
 
@@ -62,7 +66,7 @@ public final class WebSecurityBundleTests {
     public void testFiltersNotAppliedWhenDisabled() throws Exception {
         WebSecurityBundle bundle = new WebSecurityBundle();
         WebSecurityConfiguration webSecurityConfig = WebSecurityConfiguration.builder()
-                .cors(CorsConfiguration.DISABLED)
+                .cors(DISABLED)
                 .build();
 
         when(this.appConfig.getWebSecurityConfiguration()).thenReturn(webSecurityConfig);
@@ -78,7 +82,7 @@ public final class WebSecurityBundleTests {
                 .cors(CorsConfiguration.builder().allowedOrigins("http://origin").build())
                 .build();
         WebSecurityConfiguration yamlConfig = WebSecurityConfiguration.builder()
-                .cors(CorsConfiguration.DISABLED)
+                .cors(DISABLED)
                 .build();
         WebSecurityBundle bundle = new WebSecurityBundle(appDefaultConfig);
 

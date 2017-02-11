@@ -4,7 +4,6 @@
 
 package com.palantir.websecurity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import io.dropwizard.validation.ValidationMethod;
@@ -21,10 +20,8 @@ import org.immutables.value.Value;
  * passed in as an initial parameter.
  */
 @Value.Immutable
-@ImmutableStyles
-@JsonDeserialize(as = ImmutableCorsConfiguration.class)
 @SuppressWarnings("checkstyle:designforextension")
-public abstract class CorsConfiguration {
+abstract class AbstractCorsConfiguration {
 
     private static final String DISABLED_ORIGINS = "";
 
@@ -122,40 +119,5 @@ public abstract class CorsConfiguration {
         }
 
         return true;
-    }
-
-    /**
-     * Provides a configuration with default values.
-     */
-    public static final CorsConfiguration DEFAULT = CorsConfiguration.builder().build();
-
-    /**
-     * Provides a configuration that is disabled.
-     */
-    public static final CorsConfiguration DISABLED = CorsConfiguration.builder()
-            .allowedOrigins(DISABLED_ORIGINS)
-            .build();
-
-    // hides implementation details
-    public static Builder builder() {
-        return ImmutableCorsConfiguration.builder();
-    }
-
-    // hides implementation details
-    public interface Builder {
-
-        Builder allowCredentials(boolean allowCredentials);
-
-        Builder allowedHeaders(String allowedHeaders);
-
-        Builder allowedMethods(String allowedMethods);
-
-        Builder allowedOrigins(String allowedOrigins);
-
-        Builder exposedHeaders(String exposedHeaders);
-
-        Builder preflightMaxAge(long preflightMaxAge);
-
-        CorsConfiguration build();
     }
 }

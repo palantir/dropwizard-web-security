@@ -44,7 +44,7 @@ public final class WebSecurityHeaderInjectorTests {
 
     @Test
     public void testHeadersReplacedNotAppended() {
-        WebSecurityConfiguration config = WebSecurityConfiguration.DEFAULT;
+        WebSecurityConfiguration config = WebSecurityConfiguration.builder().build();
         WebSecurityHeaderInjector injector = new WebSecurityHeaderInjector(config);
 
         request.addHeader(HttpHeaders.USER_AGENT, WebSecurityHeaderInjector.USER_AGENT_IE_10);

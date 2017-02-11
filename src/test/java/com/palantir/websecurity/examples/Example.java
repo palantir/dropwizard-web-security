@@ -62,8 +62,9 @@ public final class Example {
         @JsonProperty("webSecurity")
         @NotNull
         @Valid
-        private final WebSecurityConfiguration webSecurity = WebSecurityConfiguration.DEFAULT;
+        private final WebSecurityConfiguration webSecurity = WebSecurityConfiguration.builder().build();
 
+        @Override
         public WebSecurityConfiguration getWebSecurityConfiguration() {
             return this.webSecurity;
         }
