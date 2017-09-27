@@ -64,6 +64,7 @@ public final class Example {
         @Valid
         private final WebSecurityConfiguration webSecurity = WebSecurityConfiguration.DEFAULT;
 
+        @Override
         public WebSecurityConfiguration getWebSecurityConfiguration() {
             return this.webSecurity;
         }

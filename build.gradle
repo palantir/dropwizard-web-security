@@ -1,10 +1,12 @@
 buildscript {
     repositories {
-        jcenter()
+        maven {
+            url 'http://palantir.bintray.com/releases'
+        }
     }
 
     dependencies {
-        classpath "com.palantir:gradle-baseline-java:${baselineVersion}"
+        classpath 'com.palantir.baseline:gradle-baseline-java:0.16.0'
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:${bintrayVersion}"
     }
 }
@@ -19,14 +21,19 @@ apply plugin: 'com.palantir.baseline-config'
 apply plugin: 'com.palantir.baseline-idea'
 apply plugin: 'com.palantir.baseline-eclipse'
 apply plugin: 'com.palantir.baseline-checkstyle'
-apply plugin: 'com.palantir.baseline-findbugs'
+apply plugin: 'com.palantir.baseline-error-prone'
 apply from: "${rootDir}/gradle/publish.gradle"
 
 repositories {
     jcenter()
+    maven {
+        url 'http://palantir.bintray.com/releases'
+    }
 }
 
 dependencies {
+    baseline 'com.palantir.baseline:gradle-baseline-java-config:0.16.0@zip'
+
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
 
     processor "org.immutables:value:$immutablesVersion"
