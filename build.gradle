@@ -7,6 +7,7 @@ buildscript {
 
     dependencies {
         classpath 'com.palantir.baseline:gradle-baseline-java:0.16.0'
+        classpath 'com.palantir.configurationresolver:gradle-configuration-resolver-plugin:0.3.0'
         classpath 'com.palantir.gradle.gitversion:gradle-git-version:0.9.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
         classpath 'gradle.plugin.org.inferred:gradle-processors:1.2.15'
@@ -21,6 +22,7 @@ apply plugin: 'com.palantir.baseline-eclipse'
 apply plugin: 'com.palantir.baseline-checkstyle'
 apply plugin: 'org.inferred.processors'  // installs the "processor" configuration needed for baseline-error-prone
 apply plugin: 'com.palantir.baseline-error-prone'
+apply plugin: 'com.palantir.configuration-resolver'
 apply from: "${rootDir}/gradle/publish.gradle"
 
 repositories {
@@ -51,16 +53,3 @@ group 'com.palantir.websecurity'
 version gitVersion()
 
 sourceCompatibility = 1.8
-
-task resolveConfigurations {
-    description = 'Forces the resolution of all dependencies in all configurations'
-    group = 'build'
-
-    doLast {
-        configurations.all { c ->
-            if (c.canBeResolved) {
-                c.resolve()
-            }
-        }
-    }
-}
