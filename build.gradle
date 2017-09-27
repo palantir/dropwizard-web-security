@@ -1,32 +1,36 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url 'http://palantir.bintray.com/releases' }
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
 
     dependencies {
-        classpath "com.palantir:gradle-baseline-java:${baselineVersion}"
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:${bintrayVersion}"
+        classpath 'com.palantir.baseline:gradle-baseline-java:0.16.0'
+        classpath 'com.palantir.gradle.gitversion:gradle-git-version:0.9.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        classpath 'gradle.plugin.org.inferred:gradle-processors:1.2.15'
     }
 }
 
-plugins {
-    id 'org.inferred.processors' version '1.1.5'
-    id 'com.palantir.git-version' version '0.5.3'
-}
-
 apply plugin: 'java'
+apply plugin: 'com.palantir.git-version'
 apply plugin: 'com.palantir.baseline-config'
 apply plugin: 'com.palantir.baseline-idea'
 apply plugin: 'com.palantir.baseline-eclipse'
 apply plugin: 'com.palantir.baseline-checkstyle'
-apply plugin: 'com.palantir.baseline-findbugs'
+apply plugin: 'org.inferred.processors'  // installs the "processor" configuration needed for baseline-error-prone
+apply plugin: 'com.palantir.baseline-error-prone'
 apply from: "${rootDir}/gradle/publish.gradle"
 
 repositories {
     jcenter()
+    maven { url 'http://palantir.bintray.com/releases' }
 }
 
 dependencies {
+    baseline 'com.palantir.baseline:gradle-baseline-java-config:0.16.0@zip'
+
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
 
     processor "org.immutables:value:$immutablesVersion"
@@ -47,3 +51,16 @@ group 'com.palantir.websecurity'
 version gitVersion()
 
 sourceCompatibility = 1.8
+
+task resolveConfigurations {
+    description = 'Forces the resolution of all dependencies in all configurations'
+    group = 'build'
+
+    doLast {
+        configurations.all { c ->
+            if (c.canBeResolved) {
+                c.resolve()
+            }
+        }
+    }
+}

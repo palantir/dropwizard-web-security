@@ -4,6 +4,7 @@
 # Gradle
 .gradle/
 build/
+reports/
 
 # Eclipse
 .classpath
