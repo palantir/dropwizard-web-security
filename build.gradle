@@ -19,8 +19,8 @@ apply plugin: 'com.palantir.baseline-config'
 apply plugin: 'com.palantir.baseline-idea'
 apply plugin: 'com.palantir.baseline-eclipse'
 apply plugin: 'com.palantir.baseline-checkstyle'
+apply plugin: 'org.inferred.processors'  // installs the "processor" configuration needed for baseline-error-prone
 apply plugin: 'com.palantir.baseline-error-prone'
-apply plugin: 'org.inferred.processors'
 apply from: "${rootDir}/gradle/publish.gradle"
 
 repositories {
