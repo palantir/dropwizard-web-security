@@ -34,15 +34,15 @@ public final class ExampleRestTests {
     @BeforeClass
     public static void beforeClass() {
         client = new JerseyClientBuilder(RULE.getEnvironment())
-                .withProperty(ClientProperties.CONNECT_TIMEOUT, 1000)
-                .withProperty(ClientProperties.READ_TIMEOUT, 1000)
+                .withProperty(ClientProperties.CONNECT_TIMEOUT, 10000)
+                .withProperty(ClientProperties.READ_TIMEOUT, 10000)
                 .build("tests");
     }
 
     @Test
     public void testCorsHeadersAppliedToApi() {
         Response response = client
-                .target(String.format("http://127.0.0.1:%d/example-context/hello", RULE.getLocalPort())).request()
+                .target(String.format("http://localhost:%d/example-context/hello", RULE.getLocalPort())).request()
                 .header(HttpHeaders.ORIGIN, ORIGIN_VALUE)
                 .get();
 
@@ -57,7 +57,7 @@ public final class ExampleRestTests {
     @Test
     public void testWebSecurityHeadersNotAppliedToApi() {
         Response response = client
-                .target(String.format("http://127.0.0.1:%d/example-context/hello", RULE.getLocalPort())).request()
+                .target(String.format("http://localhost:%d/example-context/hello", RULE.getLocalPort())).request()
                 .get();
 
         // check basic functionality
