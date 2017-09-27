@@ -10,11 +10,11 @@ general:
 
 dependencies:
   override:
-    - ./gradlew assemble compileTestJava
+    - ./gradlew --parallel resolveConfigurations
 
 test:
   override:
-    - ./scripts/verify.sh
+    - ./gradlew --parallel --stracktrace build
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
     - find . -type f -regex ".*/build/.*TEST.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;

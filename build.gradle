@@ -51,3 +51,16 @@ group 'com.palantir.websecurity'
 version gitVersion()
 
 sourceCompatibility = 1.8
+
+task resolveConfigurations {
+    description = 'Forces the resolution of all dependencies in all configurations'
+    group = 'build'
+
+    doLast {
+        configurations.all { c ->
+            if (c.canBeResolved) {
+                c.resolve()
+            }
+        }
+    }
+}
