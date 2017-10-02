@@ -49,6 +49,11 @@ public abstract class CorsConfiguration {
     public abstract Optional<String> allowedOrigins();
 
     /**
+     * If set, will be used to set the initial property {@code chainPreflight}.
+     */
+    public abstract Optional<Boolean> chainPreflight();
+
+    /**
      * Determines if {@link CrossOriginFilter} is applied. Returns true if there is an {@link #allowedOrigins()} value
      * set to a non-empty string, false otherwise.
      */
@@ -151,6 +156,8 @@ public abstract class CorsConfiguration {
         Builder allowedMethods(String allowedMethods);
 
         Builder allowedOrigins(String allowedOrigins);
+
+        Builder chainPreflight(boolean chainPreflight);
 
         Builder exposedHeaders(String exposedHeaders);
 

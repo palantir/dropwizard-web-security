@@ -125,6 +125,7 @@ public final class WebSecurityBundleTests {
                 .allowedOrigins("origins")
                 .allowedMethods("methods")
                 .allowedHeaders("headers")
+                .chainPreflight(false)
                 .preflightMaxAge(123)
                 .allowCredentials(true)
                 .exposedHeaders("exposed")
@@ -146,6 +147,7 @@ public final class WebSecurityBundleTests {
         assertEquals(config.allowedOrigins().get(), props.get(CrossOriginFilter.ALLOWED_ORIGINS_PARAM));
         assertEquals(config.allowedMethods().get(), props.get(CrossOriginFilter.ALLOWED_METHODS_PARAM));
         assertEquals(config.allowedHeaders().get(), props.get(CrossOriginFilter.ALLOWED_HEADERS_PARAM));
+        assertEquals(config.chainPreflight().get().toString(), props.get(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM));
         assertEquals(config.preflightMaxAge().get().toString(), props.get(CrossOriginFilter.PREFLIGHT_MAX_AGE_PARAM));
         assertEquals(config.allowCredentials().get().toString(), props.get(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM));
         assertEquals(config.exposedHeaders().get(), props.get(CrossOriginFilter.EXPOSED_HEADERS_PARAM));
