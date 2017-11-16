@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.palantir.baseline:gradle-baseline-java:0.16.0'
+        classpath 'com.palantir.baseline:gradle-baseline-java:0.17.1'
         classpath 'com.palantir.configurationresolver:gradle-configuration-resolver-plugin:0.3.0'
         classpath 'com.palantir.gradle.gitversion:gradle-git-version:0.9.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    baseline 'com.palantir.baseline:gradle-baseline-java-config:0.16.0@zip'
+    baseline 'com.palantir.baseline:gradle-baseline-java-config:0.17.1@zip'
 
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
 
