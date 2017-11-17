@@ -6,6 +6,7 @@ buildscript {
     }
 
     dependencies {
+        classpath 'gradle.plugin.com.palantir:gradle-circle-style:1.1.1'
         classpath 'com.palantir.baseline:gradle-baseline-java:0.17.1'
         classpath 'com.palantir.configurationresolver:gradle-configuration-resolver-plugin:0.3.0'
         classpath 'com.palantir.gradle.gitversion:gradle-git-version:0.9.0'
@@ -24,6 +25,7 @@ apply plugin: 'org.inferred.processors'  // installs the "processor" configurati
 apply plugin: 'com.palantir.baseline-error-prone'
 apply plugin: 'com.palantir.configuration-resolver'
 apply from: "${rootDir}/gradle/publish.gradle"
+apply plugin: 'com.palantir.circle.style'
 
 repositories {
     jcenter()
